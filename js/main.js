@@ -9,8 +9,6 @@ const detailsscale = (num, in_min, in_max, out_min, out_max) => {
   return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 } 
 
-
-
 // some global screen sizes to keep track of later
 let detailsminheight = window.innerHeight - 240
 let detailsoffsettop
@@ -37,12 +35,13 @@ let realpaddingbottom = 30
 // set up environment based on screen height
 calculateoffsets()
 
-// create a double back button event
+// TODO - google has poor handling of 'related images' linked from their google.com search page
+// it will sometimes load a jillion images 'looking' for the one that is meant to be enlarged
+// however, sometimes it doesn't find it at all, causing the thumbnails on the page to become erratic
+// for a split second. this is annoying and i'd like to fix it somehow.
 
-// some helper stylesheets
+// ultimately this entire thing needs to be running on a new thumbnail grid system.
 
-// forever hide the side shadowbox
-// sheet.insertRule('#irc_cc {opacity:0}')
 // forever expand grid so it doesnt jump to 50% width randomly
 sheet.insertRule('g-loading-icon {display:none!important}')
 sheet.insertRule('#rg {min-width: 95vw!important}')
