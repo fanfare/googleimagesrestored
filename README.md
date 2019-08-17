@@ -8,7 +8,7 @@ I didn't have a copy of the exact html/css of the old layout, so this is a rough
 
 This extension also re-adds the 'View Image' button that was removed at some point. It also removes those 'related searches' divs that are scattered throughout the image results, a nuisance 'feature' introduced in mid 2019.
 
-Unfortunately I don't know how long this workaround will stay working, as Google may change even more things causing some stuff to break.
+Unfortunately I don't know how long this extension will stay working, as Google may change even more things causing some stuff to break. For now it works okay.
 
 ---
 
