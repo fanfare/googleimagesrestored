@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the application, as shown on the web store.",
+      "message": "Restores Google Images to how it appeared before August 6, 2019."
+   },
+   "appName": {
+      "description": "Title of the application, as displayed on the web store.",
+      "message": "Google Images Restored"
+   }
+}
