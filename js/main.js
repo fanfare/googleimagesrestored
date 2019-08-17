@@ -582,6 +582,8 @@ const oldgis = {
       if (update) {
         let oldgisswapboxlink = document.querySelectorAll(".oldgisswapboxlink")[0]
         oldgisswapboxlink.href = linkback
+        let moredetailsareatitlelink = document.querySelectorAll(".moredetailsareatitlelink")[0]
+        moredetailsareatitlelink.href = linkback
         let moredetailsareabuttonsviewlink = document.querySelectorAll(".moredetailsareabuttonsviewlink")[0]
         let moredetailsareabuttonsvisitlink = document.querySelectorAll(".moredetailsareabuttonsvisitlink")[0]
         moredetailsareabuttonsviewlink.href = fullsize
