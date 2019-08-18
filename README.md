@@ -18,7 +18,7 @@ Unfortunately I don't know how long this extension will stay working, as Google 
 
 This extension is available on [Chrome Web Store](https://chrome.google.com/webstore/detail/google-images-restored/ncndcebmkibkhopclfdjfacgfholcghi).
 
-Also available as a [Firefox extension](https://github.com/fanfare/googleimagesrestored/raw/master/dist/google_images_restored-0.0.2-fx.xpi) -- download and drag the file into your Firefox browser to install.
+It is also available as a [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/google-images-restored/). 
 
 ---
 
