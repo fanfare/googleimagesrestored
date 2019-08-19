@@ -456,6 +456,7 @@ const oldgis = {
         let json = querystringtojson(href)
         let {docid, q, tbnid, ved, vet, bih, biw, imgrefurl, imgurl} = json
         let kei = "aaa"
+        q = encodeURIComponent(q)
         let eidblock = document.getElementById("rso")
         if (eidblock) {
           kei = eidblock.getAttribute("eid") || kei
