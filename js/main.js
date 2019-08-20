@@ -15,15 +15,15 @@ let detailsoffsettop
 
 // i don't remember exactly how google images looked on tall monitors, this is my best guess for now
 function calculateoffsets() { 
-  if (window.innerHeight > 1161) {
-    detailsoffsettop = 120
-  }
-  else if (window.innerHeight < 777) {
-    detailsoffsettop = 150
-  }
-  else {
-    detailsoffsettop = ~~(detailsscale(window.innerHeight, 777, 1161, 120, 150))
-  }
+  //if (window.innerHeight > 1161) {
+  //  detailsoffsettop = 120
+  //}
+  //else if (window.innerHeight < 777) {
+  //  detailsoffsettop = 150
+  //}
+  //else {
+  detailsoffsettop = ~~(detailsscale(window.innerHeight, 777, 1161, 120, 150))
+  //}
   detailsminheight = window.innerHeight - 240
   detailsminheight = detailsminheight < 500 ? 500 : detailsminheight
   return
@@ -510,7 +510,7 @@ const oldgis = {
         }
         xhr.onerror = function() {
           console.error("error")
-        }
+        } 
         xhr.send()
       }
       catch(e) {
@@ -574,12 +574,28 @@ const oldgis = {
           destwidth = acceptablewidth
         }        
       }
-      boxholder.style.width = `${destwidth}px`
-      boxholder.style.height = `${destheight}px`
+      
+      // drop background size drop background drop backgroundimage
+      boxholder.style.width = `${Math.round(destwidth)}px`
+      boxholder.style.height = `${Math.round(destheight)}px`
+      boxholder.style.background = "unset"
       boxholder.style.backgroundImage = `url(${thumb})`
-      swapbox.style.width = `${destwidth}px`
-      swapbox.style.height = `${destheight}px`
+      boxholder.style.backgroundSize = "cover"
+      
+      swapbox.style.width = `${Math.round(destwidth)}px`
+      swapbox.style.height = `${Math.round(destheight)}px`
+      swapbox.style.display = "block"
+
+      // checkerboard 
+      swapbox.onload = () => {
+        boxholder.style.background = `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUAQMAAAC3R49OAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAGUExURf///+rq6hX5lggAAAAUSURBVAjXY2Cw/8BADP5/gIEYDAAkgh1NOfT7DQAAAABJRU5ErkJggg==)`
+        boxholder.style.backgroundSize = "20px 20px"
+      }
+      swapbox.onerror = () => {
+        swapbox.style.display = "none"
+      }
       swapbox.src = fullsize
+      
       if (update) {
         let oldgisswapboxlink = document.querySelectorAll(".oldgisswapboxlink")[0]
         oldgisswapboxlink.href = linkback
@@ -634,17 +650,19 @@ const oldgis = {
     enable: async function(element) {
       let swapbox = document.querySelectorAll(".oldgisswapbox")[0]
       swapbox.src = ""
-      swapbox.width = "0px"
-      swapbox.height = "0px"
+      swapbox.style.width = "0px"
+      swapbox.style.height = "0px"
       element.classList.add("fmbrQQxz")
       // deploy needs to be automatically applied for shift+click listeners
       // per original div so if shift clicked it will open that url in a new window
       // left-right listener
       oldgis.data.thumb = true
-      let top = element.getBoundingClientRect().top
+      let top = element.getBoundingClientRect().top + element.offsetHeight
+      //console.log(element.offsetHeight)
       let scrolly = window.scrollY
       // TODO: maybe tween from current position to this ease-in-out
-      let target = scrolly + top + detailsoffsettop
+      //let target = scrolly + top + detailsoffsettop
+      let target = scrolly + top - detailsoffsettop
       window.scrollTo(0, target)
       oldgis.details.renew()
       try {
@@ -765,8 +783,8 @@ function unloadnativeloop() {
       oldgis.thumb.enable(activethumb)
       setTimeout(()=>{
         let scrolled = window.scrollY
-        let adjust = document.querySelectorAll(".fmbrQQxz")[0].getBoundingClientRect().top
-        window.scrollTo(0,adjust+scrolled+detailsoffsettop)
+        let adjust = document.querySelectorAll(".fmbrQQxz")[0].getBoundingClientRect().top + document.querySelectorAll(".fmbrQQxz")[0].offsetHeight
+        window.scrollTo(0,adjust+scrolled-detailsoffsettop)
         requestAnimationFrame(unloadnativeloop)
       },0)
     },0)
