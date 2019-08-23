@@ -43,6 +43,11 @@ calculateoffsets()
 // ultimately this entire thing needs to be running on a new thumbnail grid system.
 
 // forever expand grid so it doesnt jump to 50% width randomly
+
+//sheet.insertRule('div[jscontroller="Q7Rsec"]:hover .rg_ilmbg {display:block}')
+
+//sheet.insertRule('.rg_ilmbg {width: 100%!important;border-radius: 0!important;height: 15px!important;font-size: 11px!important;line-height: 15px!important;margin: 0!important;color: #f3efef!important; background: rgba(51,51,51,0.8)!important;padding: 0!important;padding-left: 4px!important}')
+sheet.insertRule('html {overflow-x:hidden!important}')
 sheet.insertRule('g-loading-icon {display:none!important}')
 sheet.insertRule('#rg {min-width: 95vw!important}')
 // disable native grid image functionality
@@ -56,11 +61,11 @@ document.body.insertAdjacentHTML("beforeend", `
 `)
 document.body.insertAdjacentHTML("beforeend", `
   <style id="oldgisdetailsspace">
-    #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#202320;top:0px;z-index:999999;display:none}
+    #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#222;top:0px;z-index:999999;display:none}
   </style>
 `)   
 sheet.insertRule('.eJXyZe {display:none!important}')
-sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #202320;border-left: 16px solid transparent;border-right: 16px solid transparent;}`)
+sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`)
 
 // build the shadowbox
 const oldgisdetails = document.createElement("div")
@@ -71,17 +76,19 @@ document.body.appendChild(oldgisdetails)
 oldgisdetails.innerHTML = `
   <style>
     .fullsizeimagearea {
-      width:60%;
-      min-width:667px;
+      flex-grow:1;
+      min-width:240px;
       display: flex;
       justify-content: center;
       align-items: center;  
       flex-direction:column;  
+      overflow:hidden;
     }
     .moredetailsarea {
-      width:40%;
+      width:calc(240px + 24%);
       font-family:arial;
       padding:20px;
+      padding-left:5px;
       display: flex;
       justify-content: center;
       flex-direction:column;
@@ -96,7 +103,7 @@ oldgisdetails.innerHTML = `
       box-sizing:border-box
     }
     .moredetailsarea .moredetailsareatitle {
-      color: #bbbebb;
+      color: #bbb;
       font-size:26px;
       display:inline-block
     }
@@ -114,8 +121,8 @@ oldgisdetails.innerHTML = `
     }
     .moredetailsareabuttons div {
       font-size: 11px;
-      color:#8d908d;
-      background:#3b3d3b;
+      color:#8e8e8e;
+      background:#3b3b3b;
       padding:8px 10px;
       font-weight:bold;
       cursor:pointer;
@@ -131,21 +138,28 @@ oldgisdetails.innerHTML = `
       margin-bottom:8px;
     }
     .moredetailsarearelated {
-      display: grid;
-      grid-template-columns: 90px 90px 90px 90px;
-      grid-gap: 8px;
+      display:flex;
+      flex-direction:column;
+    }
+    .moredetailsarearelatedrow {
+      display:flex;
+      flex-direction:row;
+    }
+    .moredetailsarearelatedbottomrow {
+      margin-top:10px;
     }
     .oldgisrelatedimage {
-      height:90px;
+      height:85px;
       cursor:pointer;
+      width:85px;
+      margin-right:10px;
     }
     .oldgisimageareaimage {
       text-align:center;
-
     }
     .oldgisimageareadetails {
       color:#707070;
-      font-size:14px;
+      font-size:12px;
       font-family:arial;
       text-align:center;
       margin-top:15px;
@@ -264,14 +278,18 @@ oldgisdetails.innerHTML = `
     <div class="moredetailsareafooter">
       <div class="moredetailsarearelatedtitle">Related images</div>
       <div class="moredetailsarearelated">
-        <div class="oldgisrelatedimage" data-gisthumbrelid="0"></div>
-        <div class="oldgisrelatedimage" data-gisthumbrelid="1"></div>
-        <div class="oldgisrelatedimage" data-gisthumbrelid="2"></div>
-        <div class="oldgisrelatedimage" data-gisthumbrelid="3"></div>
-        <div class="oldgisrelatedimage" data-gisthumbrelid="4"></div>
-        <div class="oldgisrelatedimage" data-gisthumbrelid="5"></div>
-        <div class="oldgisrelatedimage" data-gisthumbrelid="6"></div>
-        <div class="oldgisrelatedimage" data-gisthumbrelid="7"></div>
+        <div class="moredetailsarearelatedrow moredetailsarearelatedtoprow">
+          <div class="oldgisrelatedimage" data-gisthumbrelid="0"></div>
+          <div class="oldgisrelatedimage" data-gisthumbrelid="1"></div>
+          <div class="oldgisrelatedimage" data-gisthumbrelid="2"></div>
+          <div class="oldgisrelatedimage" data-gisthumbrelid="3"></div>
+        </div>
+        <div class="moredetailsarearelatedrow moredetailsarearelatedbottomrow">
+          <div class="oldgisrelatedimage" data-gisthumbrelid="4"></div>
+          <div class="oldgisrelatedimage" data-gisthumbrelid="5"></div>
+          <div class="oldgisrelatedimage" data-gisthumbrelid="6"></div>
+          <div class="oldgisrelatedimage" data-gisthumbrelid="7"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -323,7 +341,7 @@ const oldgis = {
       </style>`)
       document.getElementById("oldgisdetailsspace").remove()
       document.body.insertAdjacentHTML("beforeend", `<style id="oldgisdetailsspace">
-        #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#202320;top:0px;z-index:999999;display:none}
+        #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#222;top:0px;z-index:999999;display:none}
       </style>`)
       // nothing to reposition
       if (!oldgis.data.thumb) {
@@ -407,7 +425,7 @@ const oldgis = {
             let json = JSON.parse(meta)
             let title = result.querySelectorAll(".mVDMnf")[0].innerHTML
             let domain = json.st || json.isu
-            let thumb = `<div class="oldgisrelatedthumbdata" style="width:90px; height:90px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
+            let thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
             let insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
             insertion.innerHTML = thumb
           }
@@ -418,7 +436,7 @@ const oldgis = {
             let meta = result.querySelectorAll(".rg_meta")[0].innerHTML
             let json = JSON.parse(meta)
             let title = json.pt.length > 30 ? json.pt.substring(0,30) + " ..." : json.pt
-            let thumb = `<div class="oldgisrelatedthumbdata" style="width:90px; height:90px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${json.st}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
+            let thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${json.st}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
             let insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
             // if this is the last one
             // and 'see more' is available
@@ -427,7 +445,7 @@ const oldgis = {
               let seemore = container.querySelectorAll(".ZuJDtb")[0]
               if (seemore) {
                 let href = seemore.href
-                thumb = `<a class="oldgisseemore" href="${href}"><div class="oldgisrelatedthumbdata" style="width:90px; height:90px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})"></div></a>`
+                thumb = `<a class="oldgisseemore" href="${href}"><div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})"></div></a>`
               }
             }
             insertion.innerHTML = thumb
@@ -545,7 +563,15 @@ const oldgis = {
       let boxholder = document.querySelectorAll(".oldgisswapboxholder")[0]
       let swapbox = document.querySelectorAll(".oldgisswapbox")[0]
       let fullsizeimagearea = document.querySelectorAll(".fullsizeimagearea")[0]
-      let acceptablewidth = fullsizeimagearea.offsetWidth - 100
+      
+      let shrinkwidth = 100
+      if (window.innerWidth < 1200) {
+        shrinkwidth = ~~(detailsscale(window.innerWidth, 500, 1200, 0, 100))
+        if (shrinkwidth < 50) {
+          shrinkwidth = 50
+        }
+      }
+      let acceptablewidth = fullsizeimagearea.offsetWidth - shrinkwidth
       let acceptableheight = fullsizeimagearea.offsetHeight - 120
       let destwidth = width
       let destheight = height
@@ -647,7 +673,7 @@ const oldgis = {
       return
     },
     // make an image active
-    enable: async function(element) {
+    enable: function(element) {
       let swapbox = document.querySelectorAll(".oldgisswapbox")[0]
       swapbox.src = ""
       swapbox.style.width = "0px"
@@ -658,7 +684,6 @@ const oldgis = {
       // left-right listener
       oldgis.data.thumb = true
       let top = element.getBoundingClientRect().top + element.offsetHeight
-      //console.log(element.offsetHeight)
       let scrolly = window.scrollY
       // TODO: maybe tween from current position to this ease-in-out
       //let target = scrolly + top + detailsoffsettop
@@ -738,6 +763,10 @@ document.addEventListener("click", (e) => {
   }
   return
 })
+
+// window.addEventListener("mousemove", (e)=>{
+//   console.log(e)
+// })
 // resizing scheme triggered by resizing of the browser - will run in a loop
 // for a second after the resizing event stops to compensate for any original google page lag
 window.addEventListener('resize', ()=>{
