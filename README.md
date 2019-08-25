@@ -22,9 +22,7 @@ It is also available as a [Firefox add-on](https://addons.mozilla.org/en-US/fire
 
 ---
 
-### Feedback
-
-For comments or concerns, write me at aehtyb@gmail.com
+### Support
 
 If you would like to donate to this project, my venmo id is @lemon44
 
