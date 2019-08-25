@@ -129,8 +129,8 @@ oldgisdetails.innerHTML = `
       user-select:none!important;
       -moz-user-select:none!important;
     }
-    .moredetailsareabuttonsview {
-      margin-right:4px
+    .moredetailsareabuttonsvisit {
+      margin-right:5px
     }
     .moredetailsarearelatedtitle {
       color:#707070;
@@ -271,8 +271,8 @@ oldgisdetails.innerHTML = `
       <a href="#" class="nounderlinesupport moredetailsareatitlelink" target="_blank"><div class="moredetailsareatitle">Image</div></a>
       <div class="moredetailsareasubtitle">https://google.com</div>
       <div class="moredetailsareabuttons">
-        <a href="#" target="_blank" class="nounderlinesupport moredetailsareabuttonsviewlink"><div class="moredetailsareabuttonsview">View Image</div></a>
         <a href="#" target="_blank" class="nounderlinesupport moredetailsareabuttonsvisitlink"><div class="moredetailsareabuttonsvisit">Visit</div></a>
+        <a href="#" target="_blank" class="nounderlinesupport moredetailsareabuttonsviewlink"><div class="moredetailsareabuttonsview">View Image</div></a>
       </div>
     </div>
     <div class="moredetailsareafooter">
@@ -780,10 +780,16 @@ window.addEventListener("keydown", function (e) {
   }
   // next
   if (e.keyCode === 39) {
+    if (document.activeElement.tagName.toLowerCase() === "input") {
+      return
+    }
     oldgis.jump(true)
   }
   // prev
   else if (e.keyCode === 37) {
+    if (document.activeElement.tagName.toLowerCase() === "input") {
+      return
+    }    
     oldgis.jump(false)
   }
   // close
