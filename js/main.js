@@ -85,7 +85,7 @@ oldgisdetails.innerHTML = `
       overflow:hidden;
     }
     .moredetailsarea {
-      width:calc(240px + 24%);
+      width:calc(240px + 21%);
       font-family:arial;
       padding:20px;
       padding-left:5px;
