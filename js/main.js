@@ -5,13 +5,14 @@ var sheet = (function() {
   return style.sheet
 })()
 
-const detailsscale = (num, in_min, in_max, out_min, out_max) => {
+
+var detailsscale = (num, in_min, in_max, out_min, out_max) => {
   return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 } 
 
 // some global screen sizes to keep track of later
-let detailsminheight = window.innerHeight - 240
-let detailsoffsettop
+var detailsminheight = window.innerHeight - 240
+var detailsoffsettop
 
 // i don't remember exactly how google images looked on tall monitors, this is my best guess for now
 function calculateoffsets() { 
@@ -30,7 +31,7 @@ function calculateoffsets() {
 }
 
 // extra space below the image before the shadowbox
-let realpaddingbottom = 30
+var realpaddingbottom = 30
 
 // set up environment based on screen height
 calculateoffsets()
@@ -47,13 +48,14 @@ calculateoffsets()
 //sheet.insertRule('div[jscontroller="Q7Rsec"]:hover .rg_ilmbg {display:block}')
 
 //sheet.insertRule('.rg_ilmbg {width: 100%!important;border-radius: 0!important;height: 15px!important;font-size: 11px!important;line-height: 15px!important;margin: 0!important;color: #f3efef!important; background: rgba(51,51,51,0.8)!important;padding: 0!important;padding-left: 4px!important}')
-sheet.insertRule('html {overflow-x:hidden!important}')
-sheet.insertRule('g-loading-icon {display:none!important}')
-sheet.insertRule('#rg {min-width: 95vw!important}')
+sheet.insertRule('.nowhover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
+sheet.insertRule('html {overflow-x:hidden!important}',0)
+sheet.insertRule('g-loading-icon {display:none!important}',0)
+sheet.insertRule('#rg {min-width: 95vw!important}',0)
 // disable native grid image functionality
-sheet.insertRule('a.rg_l {pointer-events: none!important;-moz-pointer-events:none!important}')
+sheet.insertRule('a.rg_l {pointer-events: none!important;-moz-pointer-events:none!important}',0)
 // give illusion the q7rsec divs are clickable
-sheet.insertRule('div[jscontroller="Q7Rsec"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}')
+sheet.insertRule('div[jscontroller="Q7Rsec"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}',0)
 document.body.insertAdjacentHTML("beforeend", `
   <style id="oldgisbottommargin">
     html body #rg .fmbrQQxz {margin-bottom:${detailsminheight+50}px}
@@ -64,11 +66,13 @@ document.body.insertAdjacentHTML("beforeend", `
     #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#222;top:0px;z-index:999999;display:none}
   </style>
 `)   
-sheet.insertRule('.eJXyZe {display:none!important}')
-sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`)
+
+sheet.insertRule(`.rg_ilmbg {background: rgb(51,51,51,.8)!important;color: #fff!important;font-size: 11px!important;font-family: arial!important;width: 100%!important;border-radius: 0!important;padding: 2px 4px!important;white-space: nowrap!important}`,0)
+sheet.insertRule('.eJXyZe {display:none!important}',0)
+sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`,0)
 
 // build the shadowbox
-const oldgisdetails = document.createElement("div")
+var oldgisdetails = document.createElement("div")
 oldgisdetails.id = "oldgisdetails"
 document.body.appendChild(oldgisdetails)
 
@@ -248,7 +252,7 @@ oldgisdetails.innerHTML = `
       font-family: Arial;
       font-size: 16px;
       text-align: center;
-      color: #ffffffb3;
+      color: rgba(255,255,255,0.7);
       position: absolute;
       display: flex;
       white-space: Pre;
@@ -299,7 +303,7 @@ oldgisdetails.innerHTML = `
 `
 
 // main app functions
-const oldgis = {
+var oldgis = {
   data: {
     thumb: false,
     details: false,
@@ -311,22 +315,22 @@ const oldgis = {
   },
   // prev/next navigation
   jump: (next) => {
-    let top = oldgisdetails.getBoundingClientRect().top
-    let thumb = document.querySelectorAll("div.fmbrQQxz")[0]
+    var top = oldgisdetails.getBoundingClientRect().top
+    var thumb = document.querySelectorAll("div.fmbrQQxz")[0]
     if (!thumb) {
       return
     }
-    let position = Number(thumb.dataset.ri)
-    let off = next ? 1 : -1
-    let jumpthumb = document.querySelectorAll(`#rg_s > div[jscontroller="Q7Rsec"][data-ri="${position+off}"]`)[0]
+    var position = Number(thumb.dataset.ri)
+    var off = next ? 1 : -1
+    var jumpthumb = document.querySelectorAll(`#rg_s > div[jscontroller="Q7Rsec"][data-ri="${position+off}"]`)[0]
     if (!jumpthumb) {
       return
     }
     oldgis.thumb.disable()
     oldgis.thumb.enable(jumpthumb)    
-    let newtop = oldgisdetails.getBoundingClientRect().top
-    let pushdown = newtop - top
-    let nowscroll = window.scrollY
+    var newtop = oldgisdetails.getBoundingClientRect().top
+    var pushdown = newtop - top
+    var nowscroll = window.scrollY
     window.scrollTo(0, nowscroll + pushdown)
     return
   },
@@ -349,11 +353,11 @@ const oldgis = {
       }
       // do not provide new json blob - it will use the last good json
       oldgis.details.propagate(false)
-      let fulltop = document.querySelectorAll(`[jscontroller="Q7Rsec"][data-ri="0"]`)[0].getBoundingClientRect().top + window.scrollY
-      let thistop = document.querySelectorAll('div.fmbrQQxz')[0].offsetTop
-      let thisheight = document.querySelectorAll('div.fmbrQQxz')[0].offsetHeight
-      let absolutetop = fulltop + thistop + thisheight + realpaddingbottom
-      let oldgisdetails = document.getElementById("oldgisdetails")
+      var fulltop = document.querySelectorAll(`[jscontroller="Q7Rsec"][data-ri="0"]`)[0].getBoundingClientRect().top + window.scrollY
+      var thistop = document.querySelectorAll('div.fmbrQQxz')[0].offsetTop
+      var thisheight = document.querySelectorAll('div.fmbrQQxz')[0].offsetHeight
+      var absolutetop = fulltop + thistop + thisheight + realpaddingbottom
+      var oldgisdetails = document.getElementById("oldgisdetails")
       oldgisdetails.style.top = `${absolutetop}px`
     }
     if (organic) {
@@ -378,8 +382,8 @@ const oldgis = {
   details: {
     // replace the current image data with one from a related thumbnail
     override: (uid) => {
-      let meta = document.querySelectorAll(`.oldgisrelatedthumbdata[data-thumbuid="${uid}"]`)[0]
-      let json = {
+      var meta = document.querySelectorAll(`.oldgisrelatedthumbdata[data-thumbuid="${uid}"]`)[0]
+      var json = {
         fullsize: meta.dataset.fullsize,
         linkback: meta.dataset.linkback,
         thumb: meta.dataset.thumb,
@@ -388,7 +392,7 @@ const oldgis = {
         height: meta.dataset.height,
         title: meta.dataset.title
       }
-      let swapbox = document.querySelectorAll(".oldgisswapbox")[0]
+      var swapbox = document.querySelectorAll(".oldgisswapbox")[0]
       swapbox.src = ""
       swapbox.width = "0px"
       swapbox.height = "0px"      
@@ -398,10 +402,10 @@ const oldgis = {
     // request and handle related thumbnails
     related: () => {
       function propagate(blob) {
-        let container = document.createElement("div")
+        var container = document.createElement("div")
         container.innerHTML = blob
-        let results = container.querySelectorAll(".irc_rimask")
-        let footer = document.querySelectorAll(".moredetailsareafooter")[0]
+        var results = container.querySelectorAll(".irc_rimask")
+        var footer = document.querySelectorAll(".moredetailsareafooter")[0]
         // two strategies depending on what google provides for related images
         if (results.length === 0) {
           // if no native related images .. 
@@ -414,37 +418,37 @@ const oldgis = {
           function randint(min, max) {
             return ~~(Math.random() * (max - min + 1)) + min
           }
-          for (let i=0;i<target;i++) {
-            let rand = randint(0,all.length - 1)
+          for (var i=0;i<target;i++) {
+            var rand = randint(0,all.length - 1)
             shuffle.push(all[rand])
             all.splice(rand,1)
           }
-          for (let i=0;i<shuffle.length;i++) {
-            let result = document.querySelectorAll('[jscontroller="Q7Rsec"]')[i]
-            let meta = result.querySelectorAll(".rg_meta")[0].innerHTML
-            let json = JSON.parse(meta)
-            let title = result.querySelectorAll(".mVDMnf")[0].innerHTML
-            let domain = json.st || json.isu
-            let thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
-            let insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
+          for (var i=0;i<shuffle.length;i++) {
+            var result = document.querySelectorAll('[jscontroller="Q7Rsec"]')[i]
+            var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
+            var json = JSON.parse(meta)
+            var title = result.querySelectorAll(".mVDMnf")[0].innerHTML
+            var domain = json.st || json.isu
+            var thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
+            var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
             insertion.innerHTML = thumb
           }
         }
         else {
-          for (let i=0;i<results.length;i++) {
-            let result = results[i]
-            let meta = result.querySelectorAll(".rg_meta")[0].innerHTML
-            let json = JSON.parse(meta)
-            let title = json.pt.length > 30 ? json.pt.substring(0,30) + " ..." : json.pt
-            let thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${json.st}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
-            let insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
+          for (var i=0;i<results.length;i++) {
+            var result = results[i]
+            var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
+            var json = JSON.parse(meta)
+            var title = json.pt.length > 30 ? json.pt.substring(0,30) + " ..." : json.pt
+            var thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${json.st}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
+            var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
             // if this is the last one
             // and 'see more' is available
             // make the last link a 'View more' link
             if (i === 7) {
-              let seemore = container.querySelectorAll(".ZuJDtb")[0]
+              var seemore = container.querySelectorAll(".ZuJDtb")[0]
               if (seemore) {
-                let href = seemore.href
+                var href = seemore.href
                 thumb = `<a class="oldgisseemore" href="${href}"><div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})"></div></a>`
               }
             }
@@ -455,13 +459,13 @@ const oldgis = {
           }    
         }
       }
-      let relatedimages = document.querySelectorAll(`.oldgisrelatedimage`)
-      for (let i=0;i<8;i++) {
+      var relatedimages = document.querySelectorAll(`.oldgisrelatedimage`)
+      for (var i=0;i<8;i++) {
         relatedimages[i].innerHTML = ""
       }
       try {
-        let active = document.querySelectorAll('div.fmbrQQxz a[jsname="hSRGPd"]')[0]
-        let href = active.href
+        var active = document.querySelectorAll('div.fmbrQQxz a[jsname="hSRGPd"]')[0]
+        var href = active.href
         function querystringtojson(e) {            
           var pairs = e.split("?").slice(1).join().split("&")
           var result = {}
@@ -471,26 +475,26 @@ const oldgis = {
           })
           return JSON.parse(JSON.stringify(result))
         }
-        let json = querystringtojson(href)
-        let {docid, q, tbnid, ved, vet, bih, biw, imgrefurl, imgurl} = json
-        let kei = "aaa"
+        var json = querystringtojson(href)
+        var {docid, q, tbnid, ved, vet, bih, biw, imgrefurl, imgurl} = json
+        var kei = "aaa"
         q = encodeURIComponent(q)
-        let eidblock = document.getElementById("rso")
+        var eidblock = document.getElementById("rso")
         if (eidblock) {
           kei = eidblock.getAttribute("eid") || kei
         }
-        let fullhtml = document.getElementsByTagName("html")[0].innerHTML
-        let jsfsindex = fullhtml.indexOf(".jsfs")
-        let snippet = fullhtml.substring(jsfsindex,jsfsindex+60)
-        let regex = /\.jsfs\=\'(.+)\'/g
-        let match = regex.exec(snippet)
-        let jsfs = "fff"
+        var fullhtml = document.getElementsByTagName("html")[0].innerHTML
+        var jsfsindex = fullhtml.indexOf(".jsfs")
+        var snippet = fullhtml.substring(jsfsindex,jsfsindex+60)
+        var regex = /\.jsfs\=\'(.+)\'/g
+        var match = regex.exec(snippet)
+        var jsfs = "fff"
         if (match) {
           if (match[1]) {
             jsfs = match[1]
           }
         }
-        let url = `
+        var url = `
           https://www.google.com/async/imgrc
           ?ei=${kei}
           &yv=3
@@ -518,11 +522,11 @@ const oldgis = {
           &async=cidx:1,saved:0,iu:0,lp:0,_fmt:prog,_id:irc_imgrc1,_jsfs:${jsfs}
         `
         url = url.replace(/(\r\n|\n|\r| )/gm, "")
-        let xhr = new XMLHttpRequest()
+        var xhr = new XMLHttpRequest()
         xhr.open('GET', url, true)
         xhr.onload = function() {
           if (this.status >= 200 && this.status < 400) {
-            let blob = this.response
+            var blob = this.response
             propagate(blob)
           } 
         }
@@ -537,7 +541,7 @@ const oldgis = {
     },
     // load details from the json provided
     propagate: (json) => {
-      let update
+      var update
       // last good json - can use this in the event of window resizing
       if (!json) {
         update = false
@@ -547,35 +551,35 @@ const oldgis = {
         update = true
         oldgis.data.json = json
       }
-      let fullsize = json.fullsize || ""
-      let linkback = json.linkback || ""
-      let thumb = json.thumb || ""
-      let domain = json.domain || "https://google.com"
-      let width = json.width || 1
-      let height = json.height || 1
-      let title = json.title || ""
+      var fullsize = json.fullsize || ""
+      var linkback = json.linkback || ""
+      var thumb = json.thumb || ""
+      var domain = json.domain || "https://google.com"
+      var width = json.width || 1
+      var height = json.height || 1
+      var title = json.title || ""
       if (update) {
         document.querySelectorAll(".moredetailsareatitle")[0].innerHTML = title
         document.querySelectorAll(".moredetailsareasubtitle")[0].innerHTML = domain
         document.querySelectorAll(".oldgisrealwidth")[0].innerHTML = width
         document.querySelectorAll(".oldgisrealheight")[0].innerHTML = height
       }
-      let boxholder = document.querySelectorAll(".oldgisswapboxholder")[0]
-      let swapbox = document.querySelectorAll(".oldgisswapbox")[0]
-      let fullsizeimagearea = document.querySelectorAll(".fullsizeimagearea")[0]
+      var boxholder = document.querySelectorAll(".oldgisswapboxholder")[0]
+      var swapbox = document.querySelectorAll(".oldgisswapbox")[0]
+      var fullsizeimagearea = document.querySelectorAll(".fullsizeimagearea")[0]
       
-      let shrinkwidth = 100
+      var shrinkwidth = 100
       if (window.innerWidth < 1200) {
         shrinkwidth = ~~(detailsscale(window.innerWidth, 500, 1200, 0, 100))
         if (shrinkwidth < 50) {
           shrinkwidth = 50
         }
       }
-      let acceptablewidth = fullsizeimagearea.offsetWidth - shrinkwidth
-      let acceptableheight = fullsizeimagearea.offsetHeight - 120
-      let destwidth = width
-      let destheight = height
-      let ratio
+      var acceptablewidth = fullsizeimagearea.offsetWidth - shrinkwidth
+      var acceptableheight = fullsizeimagearea.offsetHeight - 120
+      var destwidth = width
+      var destheight = height
+      var ratio
       if (width >= height) {
         if (width >= acceptablewidth) {
           destwidth = acceptablewidth
@@ -623,12 +627,12 @@ const oldgis = {
       swapbox.src = fullsize
       
       if (update) {
-        let oldgisswapboxlink = document.querySelectorAll(".oldgisswapboxlink")[0]
+        var oldgisswapboxlink = document.querySelectorAll(".oldgisswapboxlink")[0]
         oldgisswapboxlink.href = linkback
-        let moredetailsareatitlelink = document.querySelectorAll(".moredetailsareatitlelink")[0]
+        var moredetailsareatitlelink = document.querySelectorAll(".moredetailsareatitlelink")[0]
         moredetailsareatitlelink.href = linkback
-        let moredetailsareabuttonsviewlink = document.querySelectorAll(".moredetailsareabuttonsviewlink")[0]
-        let moredetailsareabuttonsvisitlink = document.querySelectorAll(".moredetailsareabuttonsvisitlink")[0]
+        var moredetailsareabuttonsviewlink = document.querySelectorAll(".moredetailsareabuttonsviewlink")[0]
+        var moredetailsareabuttonsvisitlink = document.querySelectorAll(".moredetailsareabuttonsvisitlink")[0]
         moredetailsareabuttonsviewlink.href = fullsize
         moredetailsareabuttonsvisitlink.href = linkback 
       }
@@ -639,11 +643,11 @@ const oldgis = {
       if (!oldgis.data.thumb) {
         return
       }
-      let oldgisdetails = document.getElementById("oldgisdetails")
-      let thumb = document.querySelectorAll('.fmbrQQxz')[0]
-      let height = thumb.offsetHeight
-      let top = thumb.getBoundingClientRect().top
-      let scrolly = window.scrollY
+      var oldgisdetails = document.getElementById("oldgisdetails")
+      var thumb = document.querySelectorAll('.fmbrQQxz')[0]
+      var height = thumb.offsetHeight
+      var top = thumb.getBoundingClientRect().top
+      var scrolly = window.scrollY
       if (!oldgis.data.details) {
         oldgis.data.details = true
         oldgisdetails.style.display = "flex"
@@ -654,7 +658,7 @@ const oldgis = {
     // close the shadowbox
     destroy: () => {
       oldgis.data.details = false
-      let oldgisdetails = document.getElementById("oldgisdetails")
+      var oldgisdetails = document.getElementById("oldgisdetails")
       oldgisdetails.style.display = "none"      
       return
     }
@@ -664,8 +668,8 @@ const oldgis = {
     // make inactive
     disable: () => {
       if (oldgis.data.thumb) {
-        let qdivs = document.querySelectorAll(`div[jscontroller="Q7Rsec"]`)
-        for (let i=0;i<qdivs.length;i++) {
+        var qdivs = document.querySelectorAll(`div[jscontroller="Q7Rsec"]`)
+        for (var i=0;i<qdivs.length;i++) {
           qdivs[i].classList.remove("fmbrQQxz")
         }
         oldgis.data.thumb = false
@@ -674,7 +678,7 @@ const oldgis = {
     },
     // make an image active
     enable: function(element) {
-      let swapbox = document.querySelectorAll(".oldgisswapbox")[0]
+      var swapbox = document.querySelectorAll(".oldgisswapbox")[0]
       swapbox.src = ""
       swapbox.style.width = "0px"
       swapbox.style.height = "0px"
@@ -683,26 +687,26 @@ const oldgis = {
       // per original div so if shift clicked it will open that url in a new window
       // left-right listener
       oldgis.data.thumb = true
-      let top = element.getBoundingClientRect().top + element.offsetHeight
-      let scrolly = window.scrollY
+      var top = element.getBoundingClientRect().top + element.offsetHeight
+      var scrolly = window.scrollY
       // TODO: maybe tween from current position to this ease-in-out
-      //let target = scrolly + top + detailsoffsettop
-      let target = scrolly + top - detailsoffsettop
+      //var target = scrolly + top + detailsoffsettop
+      var target = scrolly + top - detailsoffsettop
       window.scrollTo(0, target)
       oldgis.details.renew()
       try {
-        let meta = document.querySelectorAll("div.fmbrQQxz .rg_meta")[0].innerHTML
-        let details = JSON.parse(meta)
-        let fullsize = details.ou
-        let linkback = details.ru
-        let thumb = details.tu
-        let domain = details.isu
-        let width = details.ow
-        let height = details.oh
-        let title = details.pt
+        var meta = document.querySelectorAll("div.fmbrQQxz .rg_meta")[0].innerHTML
+        var details = JSON.parse(meta)
+        var fullsize = details.ou
+        var linkback = details.ru
+        var thumb = details.tu
+        var domain = details.isu
+        var width = details.ow
+        var height = details.oh
+        var title = details.pt
         // more accurate if this exists
         title = document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0].innerHTML
-        let json = {
+        var json = {
           fullsize,
           linkback,
           thumb,
@@ -753,7 +757,7 @@ document.addEventListener("click", (e) => {
       oldgis.jump(true)
     }
     else if (e.target.classList.contains("oldgisrelatedthumbdata")) {
-      let thumbuid = e.target.dataset.thumbuid
+      var thumbuid = e.target.dataset.thumbuid
       oldgis.details.override(thumbuid)
     }
     
@@ -798,8 +802,8 @@ window.addEventListener("keydown", function (e) {
   }
 }, true)
 
-let expired = 0
-let doubleback = false
+var expired = 0
+var doubleback = false
 
 function unloadnativeloop() {
   if (++expired > 1000) {
@@ -809,7 +813,7 @@ function unloadnativeloop() {
   // the page was loaded with an image open in the side shadowbow - close it and open it in the new format
   var activethumb = document.getElementsByClassName('irc-s')[0]
   if (activethumb) {
-    let closebox = document.getElementById("irc_ccbc")
+    var closebox = document.getElementById("irc_ccbc")
     closebox.click()
     doubleback = true
     // unfortunately that added a new history state
@@ -817,8 +821,8 @@ function unloadnativeloop() {
     setTimeout(()=>{
       oldgis.thumb.enable(activethumb)
       setTimeout(()=>{
-        let scrolled = window.scrollY
-        let adjust = document.querySelectorAll(".fmbrQQxz")[0].getBoundingClientRect().top + document.querySelectorAll(".fmbrQQxz")[0].offsetHeight
+        var scrolled = window.scrollY
+        var adjust = document.querySelectorAll(".fmbrQQxz")[0].getBoundingClientRect().top + document.querySelectorAll(".fmbrQQxz")[0].offsetHeight
         window.scrollTo(0,adjust+scrolled-detailsoffsettop)
         requestAnimationFrame(unloadnativeloop)
       },0)
@@ -830,7 +834,6 @@ function unloadnativeloop() {
   }
 }
 unloadnativeloop()
-
 
 window.onpopstate = function (event) {
   if (event.state) {
