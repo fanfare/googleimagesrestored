@@ -46,9 +46,8 @@ calculateoffsets()
 // forever expand grid so it doesnt jump to 50% width randomly
 
 //sheet.insertRule('div[jscontroller="Q7Rsec"]:hover .rg_ilmbg {display:block}')
-
 //sheet.insertRule('.rg_ilmbg {width: 100%!important;border-radius: 0!important;height: 15px!important;font-size: 11px!important;line-height: 15px!important;margin: 0!important;color: #f3efef!important; background: rgba(51,51,51,0.8)!important;padding: 0!important;padding-left: 4px!important}')
-sheet.insertRule('.nowhover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
+// sheet.insertRule('.nowhover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
 sheet.insertRule('html {overflow-x:hidden!important}',0)
 sheet.insertRule('g-loading-icon {display:none!important}',0)
 sheet.insertRule('#rg {min-width: 95vw!important}',0)
@@ -63,11 +62,11 @@ document.body.insertAdjacentHTML("beforeend", `
 `)
 document.body.insertAdjacentHTML("beforeend", `
   <style id="oldgisdetailsspace">
-    #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#222;top:0px;z-index:999999;display:none}
+    #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#222;top:0px;z-index:100;display:none}
   </style>
 `)   
 
-sheet.insertRule(`.rg_ilmbg {background: rgb(51,51,51,.8)!important;color: #fff!important;font-size: 11px!important;font-family: arial!important;width: 100%!important;border-radius: 0!important;padding: 2px 4px!important;white-space: nowrap!important}`,0)
+//sheet.insertRule(`.rg_ilmbg {background: rgb(51,51,51,.8)!important;color: #fff!important;font-size: 11px!important;font-family: arial!important;width: 100%!important;border-radius: 0!important;padding: 2px 4px!important;white-space: nowrap!important}`,0)
 sheet.insertRule('.eJXyZe {display:none!important}',0)
 sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`,0)
 
@@ -345,7 +344,7 @@ var oldgis = {
       </style>`)
       document.getElementById("oldgisdetailsspace").remove()
       document.body.insertAdjacentHTML("beforeend", `<style id="oldgisdetailsspace">
-        #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#222;top:0px;z-index:999999;display:none}
+        #oldgisdetails {left:0;position:absolute;width:100%;display:block;height:${detailsminheight}px;background:#222;top:0px;z-index:100;display:none}
       </style>`)
       // nothing to reposition
       if (!oldgis.data.thumb) {
@@ -755,6 +754,9 @@ document.addEventListener("click", (e) => {
     }
     else if (e.target.id === "oldgisbuttonnext") {
       oldgis.jump(true)
+    }
+    else if (e.target.id === "hdtb-tls") {
+      oldgis.resize(true)
     }
     else if (e.target.classList.contains("oldgisrelatedthumbdata")) {
       var thumbuid = e.target.dataset.thumbuid
