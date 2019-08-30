@@ -780,26 +780,26 @@ window.addEventListener('resize', ()=>{
 })
 // remove original arrowkey listeners
 window.addEventListener("keydown", function (e) {
+  
+  if (document.activeElement.tagName.toLowerCase() === "input") {
+    return
+  }  
   e.stopPropagation()
   if (!oldgis.data.thumb) {
     return
   }
   // next
   if (e.keyCode === 39) {
-    if (document.activeElement.tagName.toLowerCase() === "input") {
-      return
-    }
     oldgis.jump(true)
   }
   // prev
   else if (e.keyCode === 37) {
-    if (document.activeElement.tagName.toLowerCase() === "input") {
-      return
-    }    
+    e.stopPropagation()   
     oldgis.jump(false)
   }
   // close
   else if (e.keyCode === 27) {
+    e.stopPropagation()
     oldgis.power.off()
   }
 }, true)
