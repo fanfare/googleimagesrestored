@@ -1,3 +1,5 @@
+*Note - I'm unable to upload the latest version to the Chrome extension store right now (aug 31, 2019), it is stuck on 'pending review'. If you want the latest version, which enables thumbnail hovering to show the image size, you will need to load this as an unpacked extension in Chrome. The latest version is in this repo's [dist folder](https://github.com/fanfare/googleimagesrestored/tree/master/dist).*
+
 Google Images Restored
 =====
 ![Google Images Restored](https://i.imgur.com/wcAG1iw.png)
