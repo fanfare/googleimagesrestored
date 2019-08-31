@@ -5,7 +5,6 @@ var sheet = (function() {
   return style.sheet
 })()
 
-
 var detailsscale = (num, in_min, in_max, out_min, out_max) => {
   return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 } 
@@ -36,21 +35,17 @@ var realpaddingbottom = 30
 // set up environment based on screen height
 calculateoffsets()
 
-// TODO - google has poor handling of 'related images' linked from their google.com search page
-// it will sometimes load a jillion images 'looking' for the one that is meant to be enlarged
-// however, sometimes it doesn't find it at all, causing the thumbnails on the page to become erratic
-// for a split second. this is annoying and i'd like to fix it somehow.
-
-// ultimately this entire thing needs to be running on a new thumbnail grid system.
-
-// forever expand grid so it doesnt jump to 50% width randomly
-
-//sheet.insertRule('div[jscontroller="Q7Rsec"]:hover .rg_ilmbg {display:block}')
-//sheet.insertRule('.rg_ilmbg {width: 100%!important;border-radius: 0!important;height: 15px!important;font-size: 11px!important;line-height: 15px!important;margin: 0!important;color: #f3efef!important; background: rgba(51,51,51,0.8)!important;padding: 0!important;padding-left: 4px!important}')
-// sheet.insertRule('.nowhover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
+// native styling
+sheet.insertRule('.rg_ilmbg, .rg_anbg {width: 100%!important;border-radius: 0!important;height: 15px!important;font-size: 11px!important;line-height: 15px!important;margin: 0!important;color: #f3efef!important; background: rgba(51,51,51,0.8)!important;padding: 0!important;padding-left: 4px!important}', 0)
+sheet.insertRule('.rg_anbg * {color:#f3efef!important}', 0)
+sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_l {box-shadow: 0 2px 12px 0 rgba(0,0,0,0.35)}', 0)
+sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
+sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_anbg {display:none!important}',0)
 sheet.insertRule('html {overflow-x:hidden!important}',0)
+sheet.insertRule('.nJGrxf span, .nJGrxf {pointer-events:none!important}',0)
 sheet.insertRule('g-loading-icon {display:none!important}',0)
 sheet.insertRule('#rg {min-width: 95vw!important}',0)
+
 // disable native grid image functionality
 sheet.insertRule('a.rg_l {pointer-events: none!important;-moz-pointer-events:none!important}',0)
 // give illusion the q7rsec divs are clickable
@@ -66,7 +61,6 @@ document.body.insertAdjacentHTML("beforeend", `
   </style>
 `)   
 
-//sheet.insertRule(`.rg_ilmbg {background: rgb(51,51,51,.8)!important;color: #fff!important;font-size: 11px!important;font-family: arial!important;width: 100%!important;border-radius: 0!important;padding: 2px 4px!important;white-space: nowrap!important}`,0)
 sheet.insertRule('.eJXyZe {display:none!important}',0)
 sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`,0)
 
@@ -790,6 +784,7 @@ window.addEventListener("keydown", function (e) {
   }
   // next
   if (e.keyCode === 39) {
+    e.stopPropagation()
     oldgis.jump(true)
   }
   // prev
@@ -844,3 +839,48 @@ window.onpopstate = function (event) {
     }
   } 
 }
+
+// thumbnail hovering, careful to preserve pointer-events:none on old listeners
+// while disabling thumbnail hovering when hovering over external hyperlinks
+
+var nowhover = false
+
+function oldgismouseevents(e) {
+  try {
+    // not hovering over an external hyperlink
+    if (!e.target.classList.contains("iKjWAf")) {
+      // not hovering over a thumbnail 
+      if (nowhover) {
+        document.querySelectorAll(".nowhover")[0].classList.remove("nowhover")
+        nowhover = false
+        return
+      }
+    }
+    else {
+      // hovering over a thumbnail..
+      // was it already active? if so return
+      // otherwise drop nowhover class and add it to this one
+      if (e.target.parentNode) {
+        if (e.target.parentNode.classList.contains("nowhover")) {
+          return
+        }
+        else {
+          if (nowhover) {
+            // remnant
+            document.querySelectorAll(".nowhover")[0].classList.remove("nowhover")
+          }
+          nowhover = true
+          // nowhover only applicable to rg_bx
+          if (e.target.parentNode.classList.contains("rg_bx")) {
+            e.target.parentNode.classList.add("nowhover")
+          }
+        }
+      }
+    }  
+  }
+  catch(e) {
+    
+  }
+}
+
+document.addEventListener("mousemove", oldgismouseevents, false)
