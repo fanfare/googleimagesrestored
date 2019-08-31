@@ -36,7 +36,6 @@ var realpaddingbottom = 30
 calculateoffsets()
 
 // native styling
-
 sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_l {box-shadow: 0 2px 12px 0 rgba(0,0,0,0.35)!important}', 0)
 sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
 sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_anbg {display:none!important}',0)
