@@ -36,9 +36,8 @@ var realpaddingbottom = 30
 calculateoffsets()
 
 // native styling
-sheet.insertRule('.rg_ilmbg, .rg_anbg {width: 100%!important;border-radius: 0!important;height: 15px!important;font-size: 11px!important;line-height: 15px!important;margin: 0!important;color: #f3efef!important; background: rgba(51,51,51,0.8)!important;padding: 0!important;padding-left: 4px!important}', 0)
-sheet.insertRule('.rg_anbg * {color:#f3efef!important}', 0)
-sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_l {box-shadow: 0 2px 12px 0 rgba(0,0,0,0.35)}', 0)
+
+sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_l {box-shadow: 0 2px 12px 0 rgba(0,0,0,0.35)!important}', 0)
 sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
 sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_anbg {display:none!important}',0)
 sheet.insertRule('html {overflow-x:hidden!important}',0)

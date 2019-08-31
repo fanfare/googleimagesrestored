@@ -4,3 +4,18 @@ g-loading-icon {
 #rg {
   min-width: 95vw!important
 }
+.rg_ilmbg, .rg_anbg {
+  width: 100%!important;
+  border-radius: 0!important;
+  height: 15px!important;
+  font-size: 11px!important;
+  line-height: 15px!important;
+  margin: 0!important;
+  color: #f3efef!important;
+  background: rgba(51,51,51,0.8)!important;
+  padding: 0!important;
+  padding-left: 4px!important
+}
+.rg_anbg * {
+  color:#f3efef!important
+}
