@@ -9,6 +9,153 @@ var detailsscale = (num, in_min, in_max, out_min, out_max) => {
   return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 } 
 
+var appendexactfound = false
+
+function appendexactly() {
+  try {
+    var largeli = document.querySelectorAll(`#isz_l`)[0]
+    if (largeli) {
+      var ul = largeli.parentElement
+      if (ul && ul.tagName && ul.tagName.toLowerCase() === "ul") {
+        var elems = document.querySelectorAll("li")
+        // if for some reason it already exists, e.g. google adds it back, dont append it here
+        var res = Array.from(elems).find(v => v.textContent.toLowerCase().includes('exact'))
+        if (!res) {
+          appendexactfound = true
+          ul.insertAdjacentHTML("beforeend", `<li class="hdtbItm" id="isz_ex"><a class="q qs" id="isz_ex_a" href="#">Exactly...</a>
+            <style>
+              .oldgisexactsize {
+                position: absolute;
+                top: 70px;
+                right: -250px;
+                margin-right: 5px;
+                border: 1px solid #ccc;
+                z-index: 106;
+                background: white;
+                display: inline-flex;
+                font-size: 12px;
+                flex-direction: column;
+                padding: 25px 0 15px;
+                width: 250px;
+                box-shadow: 1px 1px 6px rgba(0,0,0,0.2);
+              }
+              .oldgisexactsize input {
+                width: 85px;
+                padding: 2px 4px;
+              }
+              .oldgisexactsizetoprow {
+                font-size:15px;
+                margin-bottom: 12px;
+                padding-left:24px
+              }
+              .xogesr {
+                text-align:right
+              }
+              .oldgisexactsizemidrow {
+                display: flex;
+                justify-content: center;
+              }      
+              .oldgisexactsizebottomrow {
+                text-align: center;
+                margin-top: 10px;
+              }     
+              #xogesb {
+                display: inline-block;
+                color: #000;
+                font-weight: bold;
+                font-size: 11px;
+                padding: 3px 16px;
+                font-family:arial;
+                background: #f6f6f6;
+                border: 1px solid #dadada;
+                border-radius: 2px;
+                cursor:pointer;
+              }
+              #closeexactsize {
+                position:absolute;
+                top:10px;
+                right:12px;
+                width:16px;
+                height:16px;
+                cursor:pointer;
+                display:inline-block
+              }
+              #closeexactsize::before,
+              #closeexactsize::after {
+                content:'';
+                width:2px;
+                height:14px;
+                background:#666;
+                display:inline-block;
+                position:absolute;
+                top:1px;
+                right:7px;
+              }
+              #closeexactsize::before {
+                transform:rotate(45deg)
+              }
+              #closeexactsize::after {
+                transform:rotate(-45deg)
+              }
+              #oldgisexactsizecloak {
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 0;
+                background: rgba(255,255,255,.8);
+                cursor: pointer;              
+              }
+              .oldgisexacthide {
+                display:none
+              }
+            </style>  
+            <div id="oldgisexactsizecloak" class="oldgisexacthide"></div>
+            <div id="oldgisexactsize" class="oldgisexactsize oldgisexacthide exqty">
+              <div id="closeexactsize"></div>
+              <div class="oldgisexactsizetoprow exqty">Exact size</div>
+              <div class="oldgisexactsizemidrow exqty">
+                <table class="exqty">
+                  <tbody class="exqty">
+                    <tr class="exqty">
+                      <td class="xogesr exqty">Width:</td>
+                      <td class="exqty"><input id="oldgisexactlywidth" class="exqty" type="text"></td>
+                      <td class="exqty">px</td>
+                    </tr>
+                    <tr class="exqty">
+                      <td class="xogesr exqty">Height:</td>
+                      <td class="exqty"><input id="oldgisexactlyheight" class="exqty" type="text"></td>
+                      <td class="exqty">px</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="oldgisexactsizebottomrow exqty"><button id="xogesb" class="exqty">Go</div></button>
+            </div>        
+          </li>`)
+        }
+        else {
+          console.error("exact size already exists")
+        }
+      }
+    }
+  }
+  catch(e) {
+    
+  }
+}
+
+function querystringtojson(e) {
+  var pairs = e.split("?").slice(1).join().split("&")
+  var result = {}
+    pairs.forEach(function(pair) {
+    pair = pair.split('=')
+    result[pair[0]] = decodeURIComponent(pair[1] || '')
+  })
+  return JSON.parse(JSON.stringify(result))
+}
+
 // some global screen sizes to keep track of later
 var detailsminheight = window.innerHeight - 240
 var detailsoffsettop
@@ -61,6 +208,68 @@ document.body.insertAdjacentHTML("beforeend", `
 
 sheet.insertRule('.eJXyZe {display:none!important}',0)
 sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`,0)
+
+
+var urlsizeparamswap = (append) => {
+  var current = window.location.href
+  var params = querystringtojson(current)
+  delete params["tbs"]
+  var target = `https://www.google.com/search?q=${params["q"]}`
+  delete params["q"]
+  if (append) {
+    target += `&${append}`
+  }
+  for (let i=0;i<Object.keys(params).length;i++) {
+    var key = Object.keys(params)[i]
+    target += `&${key}=${params[key]}`
+  }
+  return target
+}
+
+var exactlyopen = false
+var exactlytool = {
+  open: () => {
+    oldgisexactsizecloak.classList.remove("oldgisexacthide")
+    oldgisexactsize.classList.remove("oldgisexacthide")
+    exactlyopen = true
+    return
+  },
+  close: () => {
+    oldgisexactsizecloak.classList.add("oldgisexacthide")
+    oldgisexactsize.classList.add("oldgisexacthide")
+    oldgisexactlywidth.value = ""
+    oldgisexactlyheight.value = ""
+    exactlyopen = false
+    document.activeElement.blur()
+    return
+  },
+  submit: () => {
+    //
+    try {
+      // get value of width and height
+      var append = null
+      var width = oldgisexactlywidth.value
+      var height = oldgisexactlyheight.value
+      if (width && !isNaN(width) && width > 0 && height && !isNaN(height) && height > 0) {
+        append = `tbs=isz:ex,iszw:${~~(width)},iszh:${~~(height)}`
+      }
+      else if (width && !isNaN(width) && width > 0) {
+        append = `tbs=isz:ex,iszw:${~~(width)},iszh:${~~(width)}`
+      }
+      else if (height && !isNaN(height) && height > 0) {
+        append = `tbs=isz:ex,iszw:${~~(height)},iszh:${~~(height)}`
+      }
+      var target = urlsizeparamswap(append)
+      window.location.href = target
+    }
+    catch(e) {
+      console.error("exact size error")
+      console.error(e)
+    }
+    return
+  }
+}
+
 
 // build the shadowbox
 var oldgisdetails = document.createElement("div")
@@ -457,15 +666,6 @@ var oldgis = {
       try {
         var active = document.querySelectorAll('div.fmbrQQxz a[jsname="hSRGPd"]')[0]
         var href = active.href
-        function querystringtojson(e) {            
-          var pairs = e.split("?").slice(1).join().split("&")
-          var result = {}
-            pairs.forEach(function(pair) {
-            pair = pair.split('=')
-            result[pair[0]] = decodeURIComponent(pair[1] || '')
-          })
-          return JSON.parse(JSON.stringify(result))
-        }
         var json = querystringtojson(href)
         var {docid, q, tbnid, ved, vet, bih, biw, imgrefurl, imgurl} = json
         var kei = "aaa"
@@ -724,9 +924,9 @@ var oldgis = {
     }
   }
 }
+
 // wait for a click events
 document.addEventListener("click", (e) => {
-  
   try {
     // grid images
     if (e.target.classList.contains("rg_bx")) {
@@ -738,23 +938,53 @@ document.addEventListener("click", (e) => {
         oldgis.thumb.enable(e.target)
       }
     }
+    // close preview button
     else if (e.target.id === "oldgisbuttonclose") {
       oldgis.power.off()
     }
+    // previous button
     else if (e.target.id === "oldgisbuttonprev") {
       oldgis.jump(false)
     }
+    // next button
     else if (e.target.id === "oldgisbuttonnext") {
       oldgis.jump(true)
     }
+    // more tools button
     else if (e.target.id === "hdtb-tls") {
       oldgis.resize(true)
     }
+    // related images
     else if (e.target.classList.contains("oldgisrelatedthumbdata")) {
       var thumbuid = e.target.dataset.thumbuid
       oldgis.details.override(thumbuid)
     }
-    
+    // exact size
+    else if (e.target.id === "isz_ex_a") {
+      e.stopPropagation()
+      e.preventDefault()
+      exactlytool.open()
+      return
+    }
+    // exact size submit
+    else if (e.target.id === "xogesb") {
+      exactlytool.submit()
+      return
+    }
+
+    // if cloak or close then also close the size selector
+    if (e.target.id === "oldgisexactsizecloak" || e.target.id === "closeexactsize") {
+      try {
+        // attempt click if fail continue
+        document.querySelectorAll('.hdtb-mn-hd')[0].click()
+      }
+      catch(e) {
+        
+      }
+    }
+    if (exactlyopen && !e.target.classList.contains("exqty")) {
+      exactlytool.close()
+    }    
   }
   catch(e) {
     console.error(e)
@@ -762,20 +992,33 @@ document.addEventListener("click", (e) => {
   return
 })
 
-// window.addEventListener("mousemove", (e)=>{
-//   console.log(e)
-// })
 // resizing scheme triggered by resizing of the browser - will run in a loop
 // for a second after the resizing event stops to compensate for any original google page lag
 window.addEventListener('resize', ()=>{
   oldgis.resize(true)
 })
+
 // remove original arrowkey listeners
 window.addEventListener("keydown", function (e) {
-  
-  if (document.activeElement.tagName.toLowerCase() === "input") {
+  if (e.keyCode && e.keyCode === 27 && exactlyopen) {
+    e.stopPropagation()
+    exactlytool.close()
+    try {
+      // attempt click if fail continue
+      document.querySelectorAll('.hdtb-mn-hd')[0].click()
+    }
+    catch(e) {
+      
+    }    
     return
   }  
+  if (document.activeElement.tagName.toLowerCase() === "input") {
+    // handle submission of exact size request
+    if (e.keyCode && e.keyCode === 13 && document.activeElement.classList.contains("exqty")) {
+      exactlytool.submit()
+    }
+    return
+  }
   e.stopPropagation()
   if (!oldgis.data.thumb) {
     return
@@ -792,6 +1035,7 @@ window.addEventListener("keydown", function (e) {
   }
   // close
   else if (e.keyCode === 27) {
+    
     e.stopPropagation()
     oldgis.power.off()
   }
@@ -882,3 +1126,16 @@ function oldgismouseevents(e) {
 }
 
 document.addEventListener("mousemove", oldgismouseevents, false)
+
+// 'exact size' feature went missing, append below but if it returns then use native
+var appendexactlycount = 0
+function appendexactlyloop() {
+  appendexactly()
+  if ((++appendexactlycount > 100) || appendexactfound) {
+    return
+  }
+  setTimeout(()=>{
+    appendexactlyloop()
+  },100)
+}
+appendexactlyloop();
