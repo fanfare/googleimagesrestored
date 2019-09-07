@@ -195,6 +195,9 @@ sheet.insertRule('#rg {min-width: 95vw!important}',0)
 sheet.insertRule('a.rg_l {pointer-events: none!important;-moz-pointer-events:none!important}',0)
 // give illusion the q7rsec divs are clickable
 sheet.insertRule('div[jscontroller="Q7Rsec"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}',0)
+sheet.insertRule('div[jscontroller="KDx8xf"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}',0)
+sheet.insertRule('div[jscontroller="KDx8xf"]:hover .rg_ilmbg {display:block!important;pointer-events:none!important}',0)
+
 document.body.insertAdjacentHTML("beforeend", `
   <style id="oldgisbottommargin">
     html body #rg .fmbrQQxz {margin-bottom:${detailsminheight+50}px}
@@ -219,7 +222,7 @@ var urlsizeparamswap = (append) => {
   if (append) {
     target += `&${append}`
   }
-  for (let i=0;i<Object.keys(params).length;i++) {
+  for (var i=0;i<Object.keys(params).length;i++) {
     var key = Object.keys(params)[i]
     target += `&${key}=${params[key]}`
   }
@@ -665,6 +668,9 @@ var oldgis = {
       }
       try {
         var active = document.querySelectorAll('div.fmbrQQxz a[jsname="hSRGPd"]')[0]
+        if (!active) {
+          throw new Error("hSRGPd not found")
+        }
         var href = active.href
         var json = querystringtojson(href)
         var {docid, q, tbnid, ved, vet, bih, biw, imgrefurl, imgurl} = json
@@ -727,7 +733,9 @@ var oldgis = {
         xhr.send()
       }
       catch(e) {
+        oldgis.power.off()
         console.error(e)
+        return
       }
     },
     // load details from the json provided
@@ -858,14 +866,17 @@ var oldgis = {
   thumb: {
     // make inactive
     disable: () => {
-      if (oldgis.data.thumb) {
-        var qdivs = document.querySelectorAll(`div[jscontroller="Q7Rsec"]`)
+      try {
+        var qdivs = document.querySelectorAll(`.rg_bx`)
         for (var i=0;i<qdivs.length;i++) {
           qdivs[i].classList.remove("fmbrQQxz")
         }
         oldgis.data.thumb = false
+        return
       }
-      return
+      catch(e) {
+        console.error(e)
+      }
     },
     // make an image active
     enable: function(element) {
@@ -896,7 +907,9 @@ var oldgis = {
         var height = details.oh
         var title = details.pt
         // more accurate if this exists
-        title = document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0].innerHTML
+        if (document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0]) {
+          title = document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0].innerHTML
+        }
         var json = {
           fullsize,
           linkback,
@@ -910,7 +923,7 @@ var oldgis = {
         oldgis.details.related()
       }
       catch(e) {
-        
+        console.error(e)
       } 
       return
     }
@@ -934,8 +947,28 @@ document.addEventListener("click", (e) => {
         oldgis.power.off()
       }
       else {
-        oldgis.thumb.disable()
-        oldgis.thumb.enable(e.target)
+        if (e.target.getAttribute("jscontroller") === "Q7Rsec") {
+          oldgis.thumb.disable()
+          oldgis.thumb.enable(e.target)
+        }
+        else if (e.target.getAttribute("jscontroller") === "KDx8xf") {
+          // its some kind of ad.. make it external hyperlinkable
+          // loop through children
+          var children = e.target.children
+          if (!children) {
+            return
+          }
+          for (var i=0;i<children.length;i++) {
+            var element = children[i]
+            if (element.getAttribute("jsname") === "kGm0Xb") {
+              var href = element.href
+              if (href) {
+                window.open(href, '_blank')
+              }
+              break
+            }
+          }
+        }
       }
     }
     // close preview button
