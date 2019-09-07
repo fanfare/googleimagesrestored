@@ -196,7 +196,7 @@ sheet.insertRule('a.rg_l {pointer-events: none!important;-moz-pointer-events:non
 // give illusion the q7rsec divs are clickable
 sheet.insertRule('div[jscontroller="Q7Rsec"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}',0)
 sheet.insertRule('div[jscontroller="KDx8xf"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}',0)
-sheet.insertRule('div[jscontroller="KDx8xf"]:hover .rg_ilmbg {display:block!important;pointer-events:none!important}',0)
+sheet.insertRule('div[jscontroller="KDx8xf"]:hover .rg_ilmbg {display:block!important;height:100%!important;pointer-events:none!important}',0)
 
 document.body.insertAdjacentHTML("beforeend", `
   <style id="oldgisbottommargin">
