@@ -232,12 +232,18 @@ var urlsizeparamswap = (append) => {
 var exactlyopen = false
 var exactlytool = {
   open: () => {
+    var oldgisexactsizecloak = document.getElementById("oldgisexactsizecloak")
+    var oldgisexactsize = document.getElementById("oldgisexactsize")
     oldgisexactsizecloak.classList.remove("oldgisexacthide")
     oldgisexactsize.classList.remove("oldgisexacthide")
     exactlyopen = true
     return
   },
   close: () => {
+    var oldgisexactsizecloak = document.getElementById("oldgisexactsizecloak")
+    var oldgisexactsize = document.getElementById("oldgisexactsize")
+    var oldgisexactlywidth = document.getElementById("oldgisexactlywidth")
+    var oldgisexactlyheight = document.getElementById("oldgisexactlyheight")
     oldgisexactsizecloak.classList.add("oldgisexacthide")
     oldgisexactsize.classList.add("oldgisexacthide")
     oldgisexactlywidth.value = ""
@@ -249,6 +255,9 @@ var exactlytool = {
   submit: () => {
     //
     try {
+      var oldgisexactlywidth = document.getElementById("oldgisexactlywidth")
+      var oldgisexactlyheight = document.getElementById("oldgisexactlyheight")
+      
       // get value of width and height
       var append = null
       var width = oldgisexactlywidth.value
