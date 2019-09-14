@@ -142,7 +142,7 @@ function appendexactly() {
     }
   }
   catch(e) {
-    
+    console.error(e)
   }
 }
 
@@ -366,9 +366,17 @@ oldgisdetails.innerHTML = `
     }
     .oldgisrelatedimage {
       height:85px;
-      cursor:pointer;
       width:85px;
       margin-right:10px;
+    }
+    .oldgisrelatedthumbdata.oldgisrelatedcurrentselection {
+      box-shadow: 0px 0px 0px 1px #222, 0px 0px 0px 3px #bbb!important
+    }
+    .oldgisrelatedthumbdata:hover, .oldgisseemore:hover .oldgisrelatedthumbdata {
+      box-shadow: 0px 0px 0px 1px #222, 0px 0px 0px 2px #ddd
+    }
+    .oldgisrelatedthumbdata:active, .oldgisseemore:active .oldgisrelatedthumbdata {
+      box-shadow: 0px 0px 0px 1px #222, 0px 0px 0px 2px #fff
     }
     .oldgisimageareaimage {
       text-align:center;
@@ -472,6 +480,10 @@ oldgisdetails.innerHTML = `
       vertical-align: center;
       justify-content: center;
       align-items: center;
+    }
+    .oldgisseemore:hover::before {
+      background: rgba(23, 23, 23, 0.64);
+      color: rgba(255,255,255,0.88);
     }
   </style>
   <div class="oldgiscontent fullsizeimagearea">
@@ -619,12 +631,19 @@ var oldgis = {
         var results = container.querySelectorAll(".irc_rimask")
         var footer = document.querySelectorAll(".moredetailsareafooter")[0]
         // two strategies depending on what google provides for related images
+        // for both strategies, ensure the first image is the primary thumbnail image
+        
+        // set it up here and mark it to ensure it isnt re-used again later
+        var thumb = `<div class="oldgisrelatedthumbdata oldgisrelatedcurrentselection" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${oldgis.data.json.thumb})" data-title="${oldgis.data.json.title}" data-domain="${oldgis.data.json.domain}" data-width="${oldgis.data.json.width}" data-height="${oldgis.data.json.height}" data-thumb="${oldgis.data.json.thumb}" data-fullsize="${oldgis.data.json.fullsize}" data-linkback="${oldgis.data.json.linkback}" data-thumbuid="${oldgis.data.json.id}"></div>`
+        var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="0"]`)[0]
+        insertion.innerHTML = thumb        
         if (results.length === 0) {
           // if no native related images .. 
           // gather some random images from the page and populate the thumbnails
-          var other = document.querySelectorAll('[jscontroller="Q7Rsec"]')
+          // check to ensure this doesn't re-add the primary image 
+          var other = document.querySelectorAll('[jscontroller="Q7Rsec"]:not(.fmbrQQxz)')
           var target = other.length
-          target = target > 8 ? 8 : target
+          target = target > 7 ? 7 : target
           var shuffle = []
           var all = Array.from(Array(other.length).keys())
           function randint(min, max) {
@@ -636,13 +655,13 @@ var oldgis = {
             all.splice(rand,1)
           }
           for (var i=0;i<shuffle.length;i++) {
-            var result = document.querySelectorAll('[jscontroller="Q7Rsec"]')[i]
+            var result = document.querySelectorAll('[jscontroller="Q7Rsec"]:not(.fmbrQQxz)')[shuffle[i]]
             var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
             var json = JSON.parse(meta)
             var title = result.querySelectorAll(".mVDMnf")[0].innerHTML
             var domain = json.st || json.isu
-            var thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
-            var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
+            var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
+            var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i+1}"]`)[0]
             insertion.innerHTML = thumb
           }
         }
@@ -652,20 +671,20 @@ var oldgis = {
             var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
             var json = JSON.parse(meta)
             var title = json.pt.length > 30 ? json.pt.substring(0,30) + " ..." : json.pt
-            var thumb = `<div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${json.st}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
-            var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i}"]`)[0]
+            var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${json.st}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
+            var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i+1}"]`)[0]
             // if this is the last one
             // and 'see more' is available
             // make the last link a 'View more' link
-            if (i === 7) {
+            if (i === 6) {
               var seemore = container.querySelectorAll(".ZuJDtb")[0]
               if (seemore) {
                 var href = seemore.href
-                thumb = `<a class="oldgisseemore" href="${href}"><div class="oldgisrelatedthumbdata" style="width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})"></div></a>`
+                thumb = `<a class="oldgisseemore" href="${href}"><div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})"></div></a>`
               }
             }
             insertion.innerHTML = thumb
-            if (i > 6) {
+            if (i > 5) {
               break
             }
           }    
@@ -915,6 +934,7 @@ var oldgis = {
         var width = details.ow
         var height = details.oh
         var title = details.pt
+        var id = details.id
         // more accurate if this exists
         if (document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0]) {
           title = document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0].innerHTML
@@ -926,7 +946,8 @@ var oldgis = {
           domain,
           width,
           height,
-          title
+          title,
+          id: id
         }
         oldgis.details.propagate(json)
         oldgis.details.related()
@@ -998,6 +1019,11 @@ document.addEventListener("click", (e) => {
     }
     // related images
     else if (e.target.classList.contains("oldgisrelatedthumbdata")) {
+      var oldselection = document.querySelectorAll(".oldgisrelatedcurrentselection")
+      if (oldselection && oldselection[0]) {
+        oldselection[0].classList.remove("oldgisrelatedcurrentselection")
+      }
+      e.target.classList.add("oldgisrelatedcurrentselection")
       var thumbuid = e.target.dataset.thumbuid
       oldgis.details.override(thumbuid)
     }
@@ -1021,7 +1047,7 @@ document.addEventListener("click", (e) => {
         document.querySelectorAll('.hdtb-mn-hd')[0].click()
       }
       catch(e) {
-        
+        console.error(e)
       }
     }
     if (exactlyopen && !e.target.classList.contains("exqty")) {
@@ -1163,7 +1189,7 @@ function oldgismouseevents(e) {
     }  
   }
   catch(e) {
-    
+    console.error(e)
   }
 }
 
@@ -1173,7 +1199,7 @@ document.addEventListener("mousemove", oldgismouseevents, false)
 var appendexactlycount = 0
 function appendexactlyloop() {
   appendexactly()
-  if ((++appendexactlycount > 100) || appendexactfound) {
+  if (appendexactfound || (++appendexactlycount > 100)) {
     return
   }
   setTimeout(()=>{
