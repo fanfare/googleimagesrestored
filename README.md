@@ -1,4 +1,4 @@
-*NOTICE - if this extension stops working for some reason, please try clearing your cache/cookies -- this has been reported by a few users and it is unclear why this happens. As of Oct 1 the extension is still working and clearing the cache/cookies remedies the problem*
+*NOTICE - if this extension stops working for some reason, please try clearing your cache/cookies -- this has been reported by a few users and it is unclear why this happens. As of Oct 23 the extension is still working and clearing the cache/cookies remedies the problem*
 
 Google Images Restored
 =====
