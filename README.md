@@ -1,3 +1,5 @@
+*NOTICE PT 2 (Oct 26) - google is definitely changing up some stuff and this extension is beginning to intermittently stop working for some users. i've been able to reproduce it not working locally, and clearing google's `NID` cookie still fixes it for me, but it might not work for you.*
+
 *NOTICE - if this extension stops working for some reason, please try clearing your cache/cookies -- this has been reported by a few users and it is unclear why this happens. As of Oct 23 the extension is still working and clearing the cache/cookies remedies the problem*
 
 Google Images Restored
