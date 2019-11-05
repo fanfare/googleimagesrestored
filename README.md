@@ -1,3 +1,7 @@
+*NOTICE PT 2 (Oct 26) - google is definitely changing up some stuff and this extension is beginning to intermittently stop working for some users. i've been able to reproduce it not working locally, and clearing google's `NID` cookie still fixes it for me, but it might not work for you.*
+
+*NOTICE - if this extension stops working for some reason, please try clearing your cache/cookies -- this has been reported by a few users and it is unclear why this happens. As of Oct 23 the extension is still working and clearing the cache/cookies remedies the problem*
+
 Google Images Restored
 =====
 ![Google Images Restored](https://i.imgur.com/wcAG1iw.png)
@@ -21,11 +25,3 @@ Unfortunately I don't know how long this extension will stay working, as Google 
 This extension is available on [Chrome Web Store](https://chrome.google.com/webstore/detail/google-images-restored/ncndcebmkibkhopclfdjfacgfholcghi).
 
 It is also available as a [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/google-images-restored/). 
-
----
-
-### Support
-
-If you would like to donate to this project, my venmo id is @lemon44
-
-Thank you
