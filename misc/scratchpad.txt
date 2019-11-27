@@ -2,7 +2,43 @@
 
 if ( document.querySelectorAll(`div[data-ri="0"]`).length > 0 
   && document.querySelectorAll(`[jscontroller="Q7Rsec"]`).length === 0 ) {
-  console.log("awful new interface detected.. let user attempt to fix it")
+  console.log("error loading default.. trying dec 2019 method")
+
+// manual css injection -- override now depreciated style.css preloaded css
+
+////  #rg -> find container name, it isnt rg any more
+
+// #rg {
+//   min-width: 95vw!important
+// }
+
+////  .rg_ilmbg, .rg_anbg, .rg_anbg * -> find these as well
+
+// .rg_ilmbg, .rg_anbg {
+//   width: 100%!important;
+//   border-radius: 0!important;
+//   height: 15px!important;
+//   font-size: 11px!important;
+//   line-height: 15px!important;
+//   margin: 0!important;
+//   color: #f3efef!important;
+//   background: rgba(51,51,51,0.8)!important;
+//   padding: 0!important;
+//   padding-left: 4px!important
+// }
+// .rg_anbg * {
+//   color:#f3efef!important
+// }  
+  
+  
+  
+  
+  
+  
+  
+}
+else {
+  console.log("interface is still familiar")
 }
 
 var jscontroller = document.querySelectorAll(`div[data-ri="0"]`)[0].getAttribute("jscontroller")

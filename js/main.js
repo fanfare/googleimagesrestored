@@ -5,14 +5,18 @@ var sheet = (function() {
   return style.sheet
 })()
 
+
 var detailsscale = (num, in_min, in_max, out_min, out_max) => {
   return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 } 
 
 var appendexactfound = false
-
 function appendexactly() {
   try {
+    
+    // *** TODO ***
+    // find #isz_l replacement using some new strategy
+    
     var largeli = document.querySelectorAll(`#isz_l`)[0]
     if (largeli) {
       var ul = largeli.parentElement
@@ -160,17 +164,8 @@ function querystringtojson(e) {
 var detailsminheight = window.innerHeight - 240
 var detailsoffsettop
 
-// i don't remember exactly how google images looked on tall monitors, this is my best guess for now
 function calculateoffsets() { 
-  //if (window.innerHeight > 1161) {
-  //  detailsoffsettop = 120
-  //}
-  //else if (window.innerHeight < 777) {
-  //  detailsoffsettop = 150
-  //}
-  //else {
   detailsoffsettop = ~~(detailsscale(window.innerHeight, 777, 1161, 120, 150))
-  //}
   detailsminheight = window.innerHeight - 240
   detailsminheight = detailsminheight < 500 ? 500 : detailsminheight
   return
@@ -183,20 +178,37 @@ var realpaddingbottom = 30
 calculateoffsets()
 
 // native styling
-sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_l {box-shadow: 0 2px 12px 0 rgba(0,0,0,0.35)!important}', 0)
-sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_ilmbg {pointer-events:none!important;display:block!important}',0)
-sheet.insertRule('div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_anbg {display:none!important}',0)
-sheet.insertRule('html {overflow-x:hidden!important}',0)
-sheet.insertRule('.nJGrxf span, .nJGrxf {pointer-events:none!important}',0)
-sheet.insertRule('g-loading-icon {display:none!important}',0)
-sheet.insertRule('#rg {min-width: 95vw!important}',0)
 
+// *** TODO ***
+
+
+// the Q7Rsec controller needs to be replaced.
+// the sub rg_l divs etc all need to be replaced with a more specific selector that contains old relevant data.
+// the .nJGrxf element needs to be replaced
+// the #rg element needs to be replaced
+// the a.rg_l element needs to be replaced
+// the KDx8xf controller must be found and replaced.. as well as .rg_ilmbg
+// the .eJXyZe element must be replaced
+
+
+
+
+sheet.insertRule(`div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_l {box-shadow: 0 2px 12px 0 rgba(0,0,0,0.35)!important}`, 0)
+sheet.insertRule(`div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_ilmbg {pointer-events:none!important;display:block!important}`,0)
+sheet.insertRule(`div[jscontroller="Q7Rsec"]:not(.nowhover):hover .rg_anbg {display:none!important}`,0)
+sheet.insertRule(`html {overflow-x:hidden!important}`,0)
+sheet.insertRule(`.nJGrxf span, .nJGrxf {pointer-events:none!important}`,0)
+sheet.insertRule(`g-loading-icon {display:none!important}`,0)
+sheet.insertRule(`#rg {min-width: 95vw!important}`,0)
 // disable native grid image functionality
-sheet.insertRule('a.rg_l {pointer-events: none!important;-moz-pointer-events:none!important}',0)
+sheet.insertRule(`a.rg_l {pointer-events: none!important;-moz-pointer-events:none!important}`,0)
 // give illusion the q7rsec divs are clickable
-sheet.insertRule('div[jscontroller="Q7Rsec"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}',0)
-sheet.insertRule('div[jscontroller="KDx8xf"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}',0)
-sheet.insertRule('div[jscontroller="KDx8xf"]:hover .rg_ilmbg {display:block!important;height:100%!important;pointer-events:none!important}',0)
+sheet.insertRule(`div[jscontroller="Q7Rsec"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}`,0)
+sheet.insertRule(`div[jscontroller="KDx8xf"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}`,0)
+sheet.insertRule(`div[jscontroller="KDx8xf"]:hover .rg_ilmbg {display:block!important;height:100%!important;pointer-events:none!important}`,0)
+
+
+
 
 document.body.insertAdjacentHTML("beforeend", `
   <style id="oldgisbottommargin">
@@ -546,6 +558,11 @@ var oldgis = {
     }
     var position = Number(thumb.dataset.ri)
     var off = next ? 1 : -1
+    
+    // *** TODO ***
+    // can probably easily swap out the jscontroller here for the new global controller..
+    // but be careful, find the select item for #rg_s or just eliminate that entirely? investigate
+    
     var jumpthumb = document.querySelectorAll(`#rg_s > div[jscontroller="Q7Rsec"][data-ri="${position+off}"]`)[0]
     if (!jumpthumb) {
       return
@@ -564,6 +581,10 @@ var oldgis = {
     function routine() {
       calculateoffsets()
       document.getElementById("oldgisbottommargin").remove()
+      
+      // *** TODO ***
+      // the #rg might not be required here.. investigate
+      
       document.body.insertAdjacentHTML("beforeend", `<style id="oldgisbottommargin">
         html body #rg .fmbrQQxz {margin-bottom:${detailsminheight+50}px}
       </style>`)
@@ -577,6 +598,11 @@ var oldgis = {
       }
       // do not provide new json blob - it will use the last good json
       oldgis.details.propagate(false)
+
+      // *** TODO ***
+      // can probably easily swap out the jscontroller here for the new global controller..
+      
+      
       var fulltop = document.querySelectorAll(`[jscontroller="Q7Rsec"][data-ri="0"]`)[0].getBoundingClientRect().top + window.scrollY
       var thistop = document.querySelectorAll('div.fmbrQQxz')[0].offsetTop
       var thisheight = document.querySelectorAll('div.fmbrQQxz')[0].offsetHeight
@@ -628,6 +654,10 @@ var oldgis = {
       function propagate(blob) {
         var container = document.createElement("div")
         container.innerHTML = blob
+        
+        // *** TODO ***
+        // value of irc_rimask is different
+        
         var results = container.querySelectorAll(".irc_rimask")
         var footer = document.querySelectorAll(".moredetailsareafooter")[0]
         // two strategies depending on what google provides for related images
@@ -638,9 +668,13 @@ var oldgis = {
         var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="0"]`)[0]
         insertion.innerHTML = thumb        
         if (results.length === 0) {
+          
           // if no native related images .. 
           // gather some random images from the page and populate the thumbnails
           // check to ensure this doesn't re-add the primary image 
+          
+          // *** TODO ***
+          
           var other = document.querySelectorAll('[jscontroller="Q7Rsec"]:not(.fmbrQQxz)')
           var target = other.length
           target = target > 7 ? 7 : target
@@ -655,6 +689,9 @@ var oldgis = {
             all.splice(rand,1)
           }
           for (var i=0;i<shuffle.length;i++) {
+            
+            // *** TODO ***
+            
             var result = document.querySelectorAll('[jscontroller="Q7Rsec"]:not(.fmbrQQxz)')[shuffle[i]]
             var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
             var json = JSON.parse(meta)
@@ -668,6 +705,9 @@ var oldgis = {
         else {
           for (var i=0;i<results.length;i++) {
             var result = results[i]
+            
+            // *** TODO ***
+            
             var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
             var json = JSON.parse(meta)
             var title = json.pt.length > 30 ? json.pt.substring(0,30) + " ..." : json.pt
@@ -695,6 +735,10 @@ var oldgis = {
         relatedimages[i].innerHTML = ""
       }
       try {
+        
+        // *** TODO ***
+        // this isnt going to work any more. we need to fetch these values in a different way.
+        
         var active = document.querySelectorAll('div.fmbrQQxz a[jsname="hSRGPd"]')[0]
         if (!active) {
           throw new Error("hSRGPd not found")
@@ -708,6 +752,10 @@ var oldgis = {
         if (eidblock) {
           kei = eidblock.getAttribute("eid") || kei
         }
+        
+        // *** TODO ***
+        // see if this still works
+        
         var fullhtml = document.getElementsByTagName("html")[0].innerHTML
         var jsfsindex = fullhtml.indexOf(".jsfs")
         var snippet = fullhtml.substring(jsfsindex,jsfsindex+60)
@@ -871,6 +919,9 @@ var oldgis = {
         return
       }
       var oldgisdetails = document.getElementById("oldgisdetails")
+      
+      // *** TODO ***
+      
       var thumb = document.querySelectorAll('.fmbrQQxz')[0]
       var height = thumb.offsetHeight
       var top = thumb.getBoundingClientRect().top
@@ -895,6 +946,9 @@ var oldgis = {
     // make inactive
     disable: () => {
       try {
+        
+        // *** TODO ***
+        
         var qdivs = document.querySelectorAll(`.rg_bx`)
         for (var i=0;i<qdivs.length;i++) {
           qdivs[i].classList.remove("fmbrQQxz")
@@ -925,7 +979,14 @@ var oldgis = {
       window.scrollTo(0, target)
       oldgis.details.renew()
       try {
+        
+        // *** TODO ***
+        
         var meta = document.querySelectorAll("div.fmbrQQxz .rg_meta")[0].innerHTML
+        
+        // *** TODO ***
+        // these dont exist any more. new strategy needed.
+        
         var details = JSON.parse(meta)
         var fullsize = details.ou
         var linkback = details.ru
@@ -936,6 +997,9 @@ var oldgis = {
         var title = details.pt
         var id = details.id
         // more accurate if this exists
+        
+        // *** TODO ***
+        
         if (document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0]) {
           title = document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0].innerHTML
         }
@@ -1014,6 +1078,9 @@ document.addEventListener("click", (e) => {
       oldgis.jump(true)
     }
     // more tools button
+    
+    // *** TODO ***
+    // find this target id
     else if (e.target.id === "hdtb-tls") {
       oldgis.resize(true)
     }
@@ -1039,7 +1106,6 @@ document.addEventListener("click", (e) => {
       exactlytool.submit()
       return
     }
-
     // if cloak or close then also close the size selector
     if (e.target.id === "oldgisexactsizecloak" || e.target.id === "closeexactsize") {
       try {
@@ -1080,6 +1146,11 @@ window.addEventListener("keydown", function (e) {
     }    
     return
   }  
+  
+  // *** TODO ***
+  // main query input class:
+  // document.querySelectorAll(`header form input[spellcheck="false"]`)[0].classList.value
+  
   if (document.activeElement.tagName.toLowerCase() === "input") {
     // handle submission of exact size request
     if (e.keyCode && e.keyCode === 13 && document.activeElement.classList.contains("exqty")) {
@@ -1206,4 +1277,5 @@ function appendexactlyloop() {
     appendexactlyloop()
   },100)
 }
+
 appendexactlyloop();
