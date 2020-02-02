@@ -2328,7 +2328,7 @@ document.addEventListener("mousemove", oldgismouseevents, false)
 var appendexactlycount = 0
 function appendexactlyloop() {
   appendexactly()
-  if (appendexactfound || (++appendexactlycount > 5000)) {
+  if (appendexactfound || (++appendexactlycount > 1000)) {
     return
   }
   setTimeout(()=>{
@@ -2339,5 +2339,7 @@ function appendexactlyloop() {
 // something is messed up with the exact search
 // when it is used it overrides the other buttons
 // figure something out later
-// appendexactlyloop();
+if (gisversion === 1) {
+  appendexactlyloop();
+}
 
