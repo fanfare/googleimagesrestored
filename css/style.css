@@ -1,9 +1,12 @@
 g-loading-icon {
   display:none!important
 }
-#rg {
+#rg, .islrc {
   min-width: 95vw!important
 }
+/*
+unfortunately need to progressively load these now
+*/
 .rg_ilmbg, .rg_anbg {
   width: 100%!important;
   border-radius: 0!important;
@@ -18,4 +21,17 @@ g-loading-icon {
 }
 .rg_anbg * {
   color:#f3efef!important
+}
+
+.h312td, .RtIwE {
+  width: 100%!important;
+  border-radius: 0!important;
+  height: 15px!important;
+  font-size: 11px!important;
+  line-height: 15px!important;
+  margin: 0!important;
+  color: #f3efef!important;
+  background: rgba(51,51,51,0.8)!important;
+  padding: 0!important;
+  padding-left: 4px!important;
 }
