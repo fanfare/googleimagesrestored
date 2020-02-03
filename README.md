@@ -1,6 +1,4 @@
-*NOTICE PT 2 (Oct 26) - google is definitely changing up some stuff and this extension is beginning to intermittently stop working for some users. i've been able to reproduce it not working locally, and clearing google's `NID` cookie still fixes it for me, but it might not work for you.*
-
-*NOTICE - if this extension stops working for some reason, please try clearing your cache/cookies -- this has been reported by a few users and it is unclear why this happens. As of Oct 23 the extension is still working and clearing the cache/cookies remedies the problem*
+*Note 3 (Feb 2020) - added support for the version of google images that was causing this extension to break*
 
 Google Images Restored
 =====
@@ -8,15 +6,9 @@ Google Images Restored
 
 ### Overview
 
-This extension attempts to make Google Images look and feel like it did before they changed everything on August 6th.
-
-I didn't have a copy of the exact html/css of the old layout, so this is a rough eyeball attempt at recreating the old design and functionality from scratch. It isn't perfect, and I'm trying to fix some quirks when I can.
+This extension attempts to make Google Images look and feel like it did before they changed everything on August 6th, 2019.
 
 This extension also re-adds the 'View Image' button that was removed at some point. It also removes those 'related searches' divs that are scattered throughout the image results, a nuisance 'feature' introduced in mid 2019.
-
-Also, this extension now re-adds the 'Exact Size..' feature that was removed in late August 2019.
-
-Unfortunately I don't know how long this extension will stay working, as Google may change even more things causing some stuff to break. For now it works okay.
 
 ---
 
