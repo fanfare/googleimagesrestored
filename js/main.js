@@ -1592,7 +1592,6 @@ var oldgis = {
       if (gisversion > 1) {
         
         // console.log("append larger image based on fullsize")
-        
         var issuewiththumb = false
         
         var thumb = fullsize
@@ -1640,7 +1639,7 @@ var oldgis = {
               fullsize = gissetvalues.gisipcblobfullsize
             }
             else {
-              // console.log("fullsize didnt match up so theres an issue but the thing is done")
+              console.log("fullsize didnt match up")
             }
           }            
           // only proceed if the uniqueid is the same
@@ -1670,7 +1669,11 @@ var oldgis = {
           }
         }
         
+        // this is a backup method and only works right now in chrome
+        
         if (!oldgis.data.json.realfullsize) {
+          
+          
           // console.log("not yet full size need to find it")
           gisuniqueid = (+ new Date())
           var encurl = thumb
@@ -1691,7 +1694,8 @@ var oldgis = {
             return
           }
           else {
-            // console.log("there was an issue fetching the thumb.. investigate")
+            console.log("there was an issue fetching the thumb")
+            console.log(thumb)
             return
           }
         
@@ -1911,6 +1915,12 @@ var oldgis = {
 
           }            
          
+        }
+        
+        var realfullsize
+        
+        if (gisversion > 1) {
+          
         }
         
         var json = {
@@ -2322,7 +2332,8 @@ function oldgismouseevents(e) {
   }
 }
 
-document.addEventListener("mousemove", oldgismouseevents, false)
+// flaky in firefox and also chrome because of some 'in stock' thing .. dont use right now
+// document.addEventListener("mousemove", oldgismouseevents, false)
 
 // 'exact size' feature went missing, append below but if it returns then use native
 var appendexactlycount = 0

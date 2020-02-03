@@ -6,10 +6,44 @@ document.body.insertAdjacentHTML("afterbegin", `
 
 function gisipcprocess(gisipcblobid, gisipcblobdata) {
   
-  // console.log(gisipcblobid, gisipcblobdata)
+  // new method via jscontrol (for firefox since ff throws permission error when converting circular json to string)
   
-  var fullsize = ""
+  var fullsize = ""  
+  var realfullsizeimage = null
+  // initial images 
+  try {
+    var tarlength = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller.o.H[0].Cf.j[0].j[3].length
+    for (let i=0;i<tarlength;i++) {
+      try {
+        let reqei = gisipcblobdata
+        let basei = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller.o.H[0].Cf.j[0].j[3][i]
+        var subasei = basei.j[2].j[3].H[0]
+        if (subasei === reqei) {
+          try {
+            realfullsizeimage = basei.j[2].j[4].H[0]
+          }
+          catch(e) {
+            
+          }
+          break
+        }
+      }
+      catch(e) {
+        // console.error(e)  
+      }
+    }
+  }
+  catch(e) {
+    console.error("primary fullsize method not found.. onward")
+  }
   
+  if (realfullsizeimage !== null) {
+    // console.log("jscontrolmethod ok")
+    fullsize = realfullsizeimage
+    document.getElementById("gisipcwindowcontext").innerText = JSON.stringify({gisipcblobid:gisipcblobid, gisipcblobfullsize:fullsize})
+    return
+  }  
+
   try {
     
     var dogpile = () => {
