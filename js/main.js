@@ -201,7 +201,15 @@ function appendexactly() {
   }
 }
 
-
+function rawquerystringtojson(e) {
+  var pairs = e.split("?").slice(1).join().split("&")
+  var result = {}
+    pairs.forEach(function(pair) {
+    pair = pair.split('=')
+    result[pair[0]] = pair[1] || ''
+  })
+  return JSON.parse(JSON.stringify(result))
+}
 
 function querystringtojson(e) {
   var pairs = e.split("?").slice(1).join().split("&")
@@ -1055,8 +1063,18 @@ var oldgis = {
             pstart = p.indexOf("\\")
             p = p.substring(0,pstart)
             expglob = p
-            // console.log(expglob)
-            seemorelink = `https://www.google.com/search?q=test&tbm=isch&tbs=rimg%3A${expglob}`
+            // qs
+            var yyqs = (rawquerystringtojson(document.location.href).q).replace(/\+/g,"%20")
+            if (yyqs) {
+              seemorelink = `https://www.google.com/search?q=${yyqs}&tbm=isch&tbs=rimg%3A${expglob}`
+            }
+            // else if ((rawquerystringtojson(document.location.href).oq).replace(/\+/g,"%20")) {
+            //   yyqs = (rawquerystringtojson(document.location.href).oq).replace(/\+/g,"%20")
+            //   seemorelink = `https://www.google.com/search?q=${yyqs}&tbm=isch&tbs=rimg%3A${expglob}`
+            // }
+            else {
+              throw new Error("no searchword")
+            }
           }
           catch(e) {
             // console.error(e)
@@ -1105,9 +1123,13 @@ var oldgis = {
                     shuffled++
                     result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1})`)[0]
                     if (!result) {
-                      console.log("still no result")
-                      console.log(shuffled)
-                      continue
+                      shuffled++
+                      result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(1)`)[0]
+                      if (!result) {
+                        console.log("still no result")
+                        console.log(shuffled)
+                        continue
+                      }
                     }
                   }
                 }
