@@ -1589,10 +1589,14 @@ var oldgis = {
 
       // checkerboard 
       swapbox.onload = () => {
+        console.log("swapboxonload")
         boxholder.style.background = `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUAQMAAAC3R49OAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAGUExURf///+rq6hX5lggAAAAUSURBVAjXY2Cw/8BADP5/gIEYDAAkgh1NOfT7DQAAAABJRU5ErkJggg==)`
         boxholder.style.backgroundSize = "20px 20px"
       }
       swapbox.onerror = () => {
+        console.log("swapboxerror")
+        boxholder.style.background = `url(${json.thumb})`
+        boxholder.style.backgroundSize = `${boxholder.style.width} ${boxholder.style.width}`
         swapbox.style.display = "none"
       }
       

@@ -8,15 +8,21 @@ function gisipcprocess(gisipcblobid, gisipcblobdata) {
   
   // new method via jscontrol (for firefox since ff throws permission error when converting circular json to string)
   
+  // 
   var fullsize = ""  
   var realfullsizeimage = null
   // initial images 
   try {
-    var tarlength = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller.o.H[0].Cf.j[0].j[3].length
+    var clipf = "Cf"
+    var smef = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller.o.H[0][clipf]
+    if (smef && !smef.j) {
+      clipf = "Of"
+    }
+    var tarlength = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller.o.H[0][clipf].j[0].j[3].length
     for (let i=0;i<tarlength;i++) {
       try {
         let reqei = gisipcblobdata
-        let basei = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller.o.H[0].Cf.j[0].j[3][i]
+        let basei = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller.o.H[0][clipf].j[0].j[3][i]
         var subasei = basei.j[2].j[3].H[0]
         if (subasei === reqei) {
           try {
@@ -38,12 +44,125 @@ function gisipcprocess(gisipcblobid, gisipcblobdata) {
   }
   
   if (realfullsizeimage !== null) {
-    // console.log("jscontrolmethod ok")
+    console.log("1n f")
     fullsize = realfullsizeimage
     document.getElementById("gisipcwindowcontext").innerText = JSON.stringify({gisipcblobid:gisipcblobid, gisipcblobfullsize:fullsize})
     return
   }  
-
+  
+  try {
+    var thumbn = gisipcblobdata
+    var cwizzes = document.querySelectorAll("c-wiz")
+    var gisarray = (data) => {
+      return Object.prototype.toString.call(data) == '[object Array]'
+    }
+    var xfound = false
+    var control = null
+    for (let i=0;i<cwizzes.length;i++) {
+      if (xfound) {
+        break
+      }
+      if (cwizzes[i].__jscontroller) {
+        let controller = cwizzes[i].__jscontroller
+        for (j in controller) {
+          control = controller[j]
+          if ( typeof control === "object" 
+            && control !== null 
+            && control !== 'undefined'
+            && !gisarray(control) ) {
+            xfound = true
+            break
+          }
+        }
+      }
+    }
+    if (control) {
+      function loopcwiz(maincwiz) {
+        var findarraylength = document.querySelectorAll(`div.${document.querySelectorAll('div[data-ri="0"]')[0].classList[0]}`).length
+        var full = null
+        var itemfound = false
+        var largearrayfound = false
+        function faketraverse(data) { 
+          if (!data) {
+            return
+          }
+          if (itemfound) {
+            return
+          }
+          if ( typeof data === "object" 
+            && gisarray(data) 
+            && data.length === findarraylength) {
+            itemfound = true
+            full = data
+            return
+          }
+          if (typeof data === "object" 
+            && data !== "null"
+            && data !== "undefined" 
+            && data instanceof Element === false) {
+            var keys = Object.keys(data)
+            for (let i=0;i<keys.length;i++) {
+              var item = keys[i]
+              if (item.toString().length < 4) {
+                if ( item.toString() === "j"
+                  || item.toString() === "o"
+                  || item.toString() === "H"
+                  || !isNaN(item.toString()) === true
+                  || ( item.toString().length === 2 && item.toString().slice(-1) === "f" )) {
+                  if (!itemfound) {
+                    faketraverse(data[item])
+                  }
+                }
+              }
+            }
+          }
+          return
+        }
+        faketraverse(maincwiz)
+        return full
+      }
+      var maincwiz = document.querySelectorAll(`c-wiz.P3Xfjc`)[0].__jscontroller
+      var largearray = loopcwiz(maincwiz)
+      if (largearray !== null) {
+        for (let i=0;i<largearray.length;i++) {
+          var item = largearray[i]
+          if ( item 
+            && item.j 
+            && item.j[2] 
+            && item.j[2].j 
+            && item.j[2].j[3] 
+            && item.j[2].j[3].H 
+            && item.j[2].j[3].H[0] ) {
+            var encs = item.j[2].j[3].H[0]
+            if (encs === thumbn) {
+              if (item.j[2].j[4] && item.j[2].j[4].H && item.j[2].j[4].H[0]) {
+                var fullnx = item.j[2].j[4].H[0]
+                realfullsizeimage = fullnx
+              }
+              break
+            }
+          }
+        }
+      }
+      else {
+        console.log("couldnt find large array")
+      }
+    }
+    else {
+      console.log("no control found")
+    }
+  }
+  catch(e) {
+    console.log("secondary fullsize method not found.. onward")
+  }
+  
+  if (realfullsizeimage !== null) {
+    console.log("2n f")
+    fullsize = realfullsizeimage
+    document.getElementById("gisipcwindowcontext").innerText = JSON.stringify({gisipcblobid:gisipcblobid, gisipcblobfullsize:fullsize})
+    return
+  }  
+  
   try {
     
     var dogpile = () => {
