@@ -1,6 +1,37 @@
+// another future-proofing failsafe strategy
+//
+// the images, if for some reason cannot be found in the window object,
+// can maybe be found by transparently intercepting all the ajax as the user scrolls
+// and adding the responses to a large string that can be combed thru later
+// to find the full size image based on the thumb,
+// simliar to crawling through the window object
+// this can be strategy number 3 since ff wont support cyclical window stringify
+
+var imagepoolfromallresponsestext = ""
+
+;(function(open) {
+  XMLHttpRequest.prototype.open = function(a, b, c, d, e) {
+    this.addEventListener("readystatechange", function() {
+      try {
+        if ( this 
+          && this.readyState 
+          && this.readyState === 4 
+          && this.responseText 
+          && this.responseText.length > 0 ) {
+          imagepoolfromallresponsestext = imagepoolfromallresponsestext + this.responseText
+        }
+      }
+      catch(e) {
+        console.error(e)
+      }
+    }, false)
+    open.call(this, a, b, c, d, e)
+  }
+})(XMLHttpRequest.prototype.open);
+
 document.body.insertAdjacentHTML("afterbegin", `
   <div id="gisipcwindowcontext" style="display:none">${JSON.stringify({gisipcblobid:0, gisipcblobfullsize:""})}</div>
-`)
+`);
 
 // gisipcprocess(391, "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRwoVCofjadFKP2kZYbTTMtiaHE1Ts-N_J-NQXullw0dwg_dZR1")
 

@@ -1,8 +1,11 @@
-g-loading-icon {
+g-loading-icon, .hg3Lgc {
   display:none!important
 }
 #rg, .islrc {
   min-width: 95vw!important
+}
+#Sva75c {
+  visibility:hidden
 }
 /*
 unfortunately need to progressively load these now
