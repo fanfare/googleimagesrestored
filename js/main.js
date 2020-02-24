@@ -1,3 +1,8 @@
+const atobUTF8=function(){"use strict";function h(b){var a=b.charCodeAt(0)<<24,d=k(~a),c=0,f=b.length,e="";if(5>d&&f>=d){a=a<<d>>>24+d;for(c=1;c<d;++c)a=a<<6|b.charCodeAt(c)&63;65535>=a?e+=g(a):1114111>=a?(a-=65536,e+=g((a>>10)+55296,(a&1023)+56320)):c=0}for(;c<f;++c)e+="\ufffd";return e}var l=Math.log,m=Math.LN2,k=Math.clz32||function(b){return 31-l(b>>>0)/m|0},g=String.fromCharCode,n=atob;return function(b,a){a||"\u00ef\u00bb\u00bf"!==b.substring(0,3)||(b=b.substring(3));return n(b).replace(/[\xc0-\xff][\x80-\xbf]*/g,
+h)}}();
+
+var gisdebugmode = false
+
 let gisuniqueid
 
 function preloadipc(file, node) {
@@ -169,7 +174,9 @@ function appendexactly() {
             </li>`)
           }
           else {
-            console.error("exact size already exists")
+            if (gisdebugmode) {
+              console.error("exact size already exists")
+            }
           }
         }
       }
@@ -177,7 +184,9 @@ function appendexactly() {
     
     else if (gisversion > 1) {
       if (appendexactfound) {
-        console.log("already appended")
+        if (gisdebugmode) {
+          console.log("already appended")
+        }
         return
       }
       var largeli = document.querySelector(`[aria-label="Large"]`)
@@ -219,7 +228,9 @@ function appendexactly() {
     }
   }
   catch(e) {
-    console.error(e)
+    if (gisdebugmode) {
+      console.error(e)
+    }
   }
 }
 
@@ -366,8 +377,7 @@ var urlsizeparamswap = (append) => {
   else if (gisversion > 1) {
     var current = window.location.href
     var params = rawquerystringtojson(current)
-    console.log(current)
-    console.log(params)
+
     return null
   }
 }
@@ -431,19 +441,21 @@ var exactlytool = {
           append = `tbs=isz:ex,iszw:${~~(height)},iszh:${~~(height)}`
         }        
       }
-      console.log(append)
+
       var target = urlsizeparamswap(append)
       if (gisversion === 1) {
         window.location.href = target
       }
       else if (gisversion > 1) {
-        console.log(target)
+
         return
       }
     }
     catch(e) {
-      console.error("exact size error")
-      console.error(e)
+      if (gisdebugmode) {
+        console.error("exact size error")
+        console.error(e)
+      }
     }
     return
   }
@@ -770,10 +782,14 @@ var oldgis = {
         var meta = document.querySelectorAll(`.oldgisrelatedthumbdata[data-thumbuid="${uid}"]`)[0]
       }
       catch(e) {
-        console.error("no meta")
+        if (gisdebugmode) {
+          console.error("no meta")
+        }
       }
       if (!meta) {
-        console.error("couldnt override@@@")
+        if (gisdebugmode) {
+          console.error("couldnt override@@@")
+        }
         return
       }
       var json = {
@@ -843,7 +859,9 @@ var oldgis = {
                 insertion.innerHTML = thumb
               }
               catch(e) {
-                console.error(e)
+                if (gisdebugmode) {
+                  console.error(e)
+                }
               }
             }
           }
@@ -869,7 +887,9 @@ var oldgis = {
                 }
               }
               catch(e) {
-                console.error(e)
+                if (gisdebugmode) {
+                  console.error(e)
+                }
               }
             }    
           }
@@ -950,7 +970,9 @@ var oldgis = {
             }
           }
           catch(e) {
-            console.error(e)
+            if (gisdebugmode) {
+              console.error(e)
+            }
             related = []
           }
           try {
@@ -1014,8 +1036,7 @@ var oldgis = {
                       shuffled++
                       result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(1)`)[0]
                       if (!result) {
-                        console.log("still no result")
-                        console.log(shuffled)
+
                         continue
                       }
                     }
@@ -1071,7 +1092,9 @@ var oldgis = {
                 insertion.innerHTML = thumb
               }
               catch(e) {
-                console.error(e)
+                if (gisdebugmode) {
+                  console.error(e)
+                }
               }
             }
           }      
@@ -1098,7 +1121,9 @@ var oldgis = {
                 }
               }
               catch(e) {
-                console.error(e)
+                if (gisdebugmode) {
+                  console.error(e)
+                }
               }
             }                
             return
@@ -1176,7 +1201,9 @@ var oldgis = {
             } 
           }
           xhr.onerror = function() {
-            console.error("error")
+            if (gisdebugmode) {
+              console.error("error")
+            }
           } 
           xhr.send()
 
@@ -1192,8 +1219,10 @@ var oldgis = {
                   successcallback(this.responseText)
                 }
                 else {
-                  console.error(posturl)
-                  console.error(params)
+                  if (gisdebugmode) {
+                    console.error(posturl)
+                    console.error(params)
+                  }
                   errorcallback(this.status)
                 }
               }
@@ -1268,7 +1297,9 @@ var oldgis = {
               fsid = encodeURIComponent(p)    
             }
             catch(e) {
-              console.error("dont use fsid")
+              if (gisdebugmode) {
+                console.error("dont use fsid")
+              }
             }
             try {
               var p = fullhtml
@@ -1279,7 +1310,9 @@ var oldgis = {
               aaaat = encodeURIComponent(p)    
             }
             catch(e) {
-              console.error("dont use aaaat")
+              if (gisdebugmode) {
+                console.error("dont use aaaat")
+              }
             }
             var url = `
             https://www.google.com/_/VisualFrontendUi/data/batchexecute
@@ -1303,7 +1336,9 @@ var oldgis = {
                 propagate(data)
               }, 
               function(e) {
-                console.log("bad response from server")
+                if (gisdebugmode) {
+                  console.log("bad response from server")
+                }
               }
             )
           }
@@ -1317,7 +1352,9 @@ var oldgis = {
       }
       catch(e) {
         oldgis.power.off()
-        console.error(e)
+        if (gisdebugmode) {
+          console.error(e)
+        }
         return
       }
     },
@@ -1426,10 +1463,70 @@ var oldgis = {
             var moredetailsareabuttonsviewlink = document.querySelectorAll(".moredetailsareabuttonsviewlink")[0]
             moredetailsareabuttonsviewlink.href = fullsize            
           }
-        }
-
+        }        
+        // TODO search this and then search the html
+        // var fullajaxblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
+        
+        // primary strategy for base64 images.. if not found use a backup
         if (thumb.substring(0,4) === "data") {
-          console.log("21feb2020")
+          var jid = null
+          try {
+            // who knows if they will change things up randomly soon just prepare for whatever
+            var jimage = document.querySelector(`img[src="${thumb}"]`)
+            if (jimage) {
+              if (jimage.parentNode.getAttribute("jscontroller") === jscontroller) {
+                jid = jimage.parentNode.dataset.id
+              }
+              else if (jimage.parentNode.parentNode.getAttribute("jscontroller") === jscontroller) {
+                jid = jimage.parentNode.parentNode.dataset.id
+              }
+              else if (jimage.parentNode.parentNode.parentNode.getAttribute("jscontroller") === jscontroller) {
+                jid = jimage.parentNode.parentNode.parentNode.dataset.id
+              }
+              else if (jimage.parentNode.parentNode.parentNode.parentNode.getAttribute("jscontroller") === jscontroller) {
+                jid = jimage.parentNode.parentNode.parentNode.parentNode.dataset.id
+              }
+              else if (jimage.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("jscontroller") === jscontroller) {
+                jid = jimage.parentNode.parentNode.parentNode.parentNode.parentNode.dataset.id
+              }
+            }
+          }
+          catch(e) {
+            if (gisdebugmode) {
+              console.error(e)
+            }
+          }
+
+          if (jid) {
+            try {
+              var jindex = document.body.innerHTML.indexOf(`${jid}",`)
+              var jscrub = document.body.innerHTML.substring(jindex,document.body.innerHTML.length)
+              jindex = jscrub.indexOf(`"http`) // thumb url
+              jscrub = jscrub.substring(jindex+5, jscrub.length)
+              jindex = jscrub.indexOf(`"http`)
+              jscrub = jscrub.substring(jindex+1, jscrub.length)
+              jindex = jscrub.indexOf(`",`)
+              jscrub = jscrub.substring(0,jindex)
+              if (gisdebugmode) {
+                console.log("24feb2020")
+              }
+              fullsize = jscrub
+              gisfullconclusion()
+              return                
+            }
+            catch(e) {
+              if (gisdebugmode) {
+                console.error(e)
+              }
+            }
+          }
+        }
+        
+        // very unreliable back up emergency strategy for these base64 images.. use the http link.. might result in wrong image :(
+        if (thumb.substring(0,4) === "data") {
+          if (gisdebugmode) {
+            console.log("21feb2020")
+          }
           var revfound = false
           try {
             var qhblob = document.body.innerHTML
@@ -1457,11 +1554,17 @@ var oldgis = {
               gisfullconclusion()
               return
             }
+            else {
+              if (gisdebugmode) {
+                console.log("base64notfound")
+              }
+            }
           }
           catch(e) {
-            console.error("coudlnt resolve fullsize from html")
+            if (gisdebugmode) {
+              console.error("coudlnt resolve fullsize from html")
+            }
           }
-          
           issuewiththumb = true
         }    
 
@@ -1473,7 +1576,9 @@ var oldgis = {
               gisfullconclusion()
             }
             else {
-              // console.log("gis has changed")
+              if (gisdebugmode) {
+                console.log("gis has changed")
+              }
             }
             return
           }
@@ -1486,7 +1591,9 @@ var oldgis = {
               fullsize = gissetvalues.gisipcblobfullsize
             }
             else {
-              console.log("fullsize didnt match up")
+              if (gisdebugmode) {
+                console.log("fullsize didnt match up")
+              }
             }
           }            
           if (!found) {
@@ -1531,8 +1638,9 @@ var oldgis = {
             return
           }
           else {
-            console.log("there was an issue fetching the thumb")
-            console.log(thumb)
+            if (gisdebugmode) {
+              console.log("there was an issue fetching the thumb")
+            }
             return
           }
         }
@@ -1579,7 +1687,9 @@ var oldgis = {
         return
       }
       catch(e) {
-        console.error(e)
+        if (gisdebugmode) {
+          console.error(e)
+        }
       }
     },
     enable: function(element) {
@@ -1605,6 +1715,7 @@ var oldgis = {
         var id   
         let meta
         if (gisversion === 1) {
+          
           meta = document.querySelectorAll("div.fmbrQQxz .rg_meta")[0]
           if (meta) {
             meta = meta.innerHTML
@@ -1639,9 +1750,10 @@ var oldgis = {
               linkbackhref = document.querySelectorAll("div.fmbrQQxz a")[i].href          
               try {
                 classwgvvnb = `.${document.querySelectorAll("div.fmbrQQxz a")[i].children[0].children[0].classList[0]}`
+                //console.log(classwgvvnb)
               }
               catch(e) {
-                // console.log("no problem")
+                //console.log("no problem")
               }
               break
             }
@@ -1676,7 +1788,9 @@ var oldgis = {
             title = document.querySelectorAll(`div.fmbrQQxz ${classwgvvnb}`)[0].innerText
           }
           catch(e) {
-            // console.log("couldnt find the title")
+            if (gisdebugmode) {
+              console.log("couldnt find the title")
+            }
           }
           id = null
           try {
@@ -1717,7 +1831,9 @@ var oldgis = {
         return          
       }
       catch(e) {
-        console.error(e)
+        if (gisdebugmode) {
+          console.error(e)
+        }
         oldgis.power.off()
       } 
       return
@@ -1811,7 +1927,9 @@ document.addEventListener("click", (e) => {
     }    
   }
   catch(e) {
-    console.error(e)
+    if (gisdebugmode) {
+      console.error(e)
+    }
   }
   return
 })
@@ -1866,8 +1984,7 @@ function unloadnativeloop() {
     if (gisversion > 1) {
       activethumb = document.querySelector(".IpBtuf").parentElement.parentElement
     }
-    console.log("activethumbfound")
-    console.log(activethumb)
+
     var closebox
     if (gisversion === 1) {
       closebox = document.getElementById("irc_ccbc")

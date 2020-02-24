@@ -1,3 +1,11 @@
+const btoaUTF8=function(c,b){"use strict";return function(a,d){return c((d?"\u00ef\u00bb\u00bf":"")+a.replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g,b))}}(btoa,function(c){return function(b){var a=b.charCodeAt(0);if(55296<=a&&56319>=a)if(b=b.charCodeAt(1),b===b&&56320<=b&&57343>=b){if(a=1024*(a-55296)+b-56320+65536,65535<a)return c(240|a>>>18,128|a>>>12&63,128|a>>>6&63,128|a&63)}else return c(239,191,189);return 127>=a?inputString:2047>=a?c(192|a>>>6,128|a&63):c(224|a>>>12,128|a>>>6&63,
+128|a&63)}}(String.fromCharCode));
+
+document.body.insertAdjacentHTML("afterbegin", `
+  <div id="gisipcwindowcontext" style="display:none">${JSON.stringify({gisipcblobid:0, gisipcblobfullsize:""})}</div>
+  <div id="gisipcajaxcontent" style="display:none"></div>
+`);
+
 // another future-proofing failsafe strategy
 //
 // the images, if for some reason cannot be found in the window object,
@@ -19,6 +27,8 @@ var imagepoolfromallresponsestext = ""
           && this.responseText 
           && this.responseText.length > 0 ) {
           imagepoolfromallresponsestext = imagepoolfromallresponsestext + this.responseText
+          var gisipcajaxcontent = document.getElementById("gisipcajaxcontent")
+          gisipcajaxcontent.innerHTML = btoaUTF8(imagepoolfromallresponsestext)
         }
       }
       catch(e) {
@@ -28,10 +38,6 @@ var imagepoolfromallresponsestext = ""
     open.call(this, a, b, c, d, e)
   }
 })(XMLHttpRequest.prototype.open);
-
-document.body.insertAdjacentHTML("afterbegin", `
-  <div id="gisipcwindowcontext" style="display:none">${JSON.stringify({gisipcblobid:0, gisipcblobfullsize:""})}</div>
-`);
 
 // gisipcprocess(391, "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRwoVCofjadFKP2kZYbTTMtiaHE1Ts-N_J-NQXullw0dwg_dZR1")
 
@@ -192,13 +198,9 @@ function gisipcprocess(gisipcblobid, gisipcblobdata) {
     fullsize = realfullsizeimage
     document.getElementById("gisipcwindowcontext").innerText = JSON.stringify({gisipcblobid:gisipcblobid, gisipcblobfullsize:fullsize})
     return
-  }  
+  }
   
   try {
-    
-    var dogpile = () => {
-      return 
-    }
     
     var getCircularReplacer = () => {
       const seen = new WeakSet()
