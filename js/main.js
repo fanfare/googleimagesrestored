@@ -286,19 +286,15 @@ catch(e) {
 let lastthumbcount = 0
 
 function propagatesizeinfo() {
-  console.log("propagatesizeinfo")
   
   let jscontrollercount = document.querySelectorAll(`div[jscontroller="${jscontroller}"]`).length
   if (jscontrollercount === lastthumbcount) {
     // nothing to do
-    console.log("done")
     return
   }
   else {
-    console.log("updating")
     lastthumbcount = document.querySelectorAll(`div[jscontroller="${jscontroller}"]`).length
   }
-  console.log(lastthumbcount)
   // loop through each that dont have it
   let notmarked = document.querySelectorAll(`div[jscontroller="${jscontroller}"]:not(.sizepropagated)`)
   for (let i=0;i<notmarked.length;i++) {
@@ -309,7 +305,9 @@ function propagatesizeinfo() {
       notmarked[i].insertAdjacentHTML("beforeend", `<div class="gishoverinfo">${gisow} x ${gisoh}</div>`)
     }
     catch(e) {
-      console.error(e)
+      if (gisdebugmode) {
+        console.error(e)
+      }
     }
   }
   //console.log(notmarked)
@@ -1608,7 +1606,9 @@ var oldgis = {
         }
         
         if (revfound) {
-          console.log("t28feb2020p1")
+          if (gisdebugmode) {
+            console.log("t28feb2020p1")
+          }
           gisfullconclusion()
           return
         }  
@@ -1642,7 +1642,9 @@ var oldgis = {
         }
         
         if (revfound) {
-          console.log("t28feb2020p2")
+          if (gisdebugmode) {
+            console.log("t28feb2020p2")
+          }
           gisfullconclusion()
           return
         }
