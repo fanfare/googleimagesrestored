@@ -28,6 +28,9 @@ var sheet = (function() {
 
 let gisversion = 1
 
+
+
+
 if ( document.querySelectorAll(`div[data-ri="0"]`).length > 0 
   && document.querySelectorAll(`[jscontroller="Q7Rsec"]`).length === 0 ) {
   gisversion = 2
@@ -276,6 +279,55 @@ catch(e) {
   
 }
 
+// mutationobserver --
+
+// new jscontroller elements to append size stats
+
+let lastthumbcount = 0
+
+function propagatesizeinfo() {
+  console.log("propagatesizeinfo")
+  
+  let jscontrollercount = document.querySelectorAll(`div[jscontroller="${jscontroller}"]`).length
+  if (jscontrollercount === lastthumbcount) {
+    // nothing to do
+    console.log("done")
+    return
+  }
+  else {
+    console.log("updating")
+    lastthumbcount = document.querySelectorAll(`div[jscontroller="${jscontroller}"]`).length
+  }
+  console.log(lastthumbcount)
+  // loop through each that dont have it
+  let notmarked = document.querySelectorAll(`div[jscontroller="${jscontroller}"]:not(.sizepropagated)`)
+  for (let i=0;i<notmarked.length;i++) {
+    try {
+      notmarked[i].classList.add("sizepropagated")
+      let gisow = notmarked[i].dataset.ow || 0
+      let gisoh = notmarked[i].dataset.oh || 0
+      notmarked[i].insertAdjacentHTML("beforeend", `<div class="gishoverinfo">${gisow} x ${gisoh}</div>`)
+    }
+    catch(e) {
+      console.error(e)
+    }
+  }
+  //console.log(notmarked)
+}
+
+propagatesizeinfo()
+
+var observer = new MutationObserver(function(mutations) {
+  setTimeout(()=>{propagatesizeinfo(),500})
+  
+})
+
+observer.observe(document.getElementById("islrg"), {attributes: false, childList: true, characterData: false, subtree:true});
+
+// -- mutationobserver
+
+
+
 var classrgl = ".rg_l"
 if (gisversion > 1) {
   try {
@@ -314,8 +366,10 @@ if (gisversion === 1) {
 }
 
 if (gisversion > 1) {
-  sheet.insertRule(`div[jscontroller="${jscontroller}"]:not(.nowhover):hover span {pointer-events:none!important;display:block!important}`,0)  
-  sheet.insertRule(`div[jscontroller="${jscontroller}"]:not(.nowhover):hover ${classilmbg} {pointer-events:none!important;display:block!important}`,0)  
+  // sheet.insertRule(`div[jscontroller="${jscontroller}"]:not(.nowhover):hover span {pointer-events:none!important;display:block!important}`,0)  
+  // sheet.insertRule(`div[jscontroller="${jscontroller}"]:not(.nowhover):hover ${classilmbg} {pointer-events:none!important;display:block!important}`,0)
+  sheet.insertRule(`div[jscontroller="${jscontroller}"] ${classilmbg} {pointer-events:none!important;display:none!important}`,0)
+  sheet.insertRule(`div[jscontroller="${jscontroller}"]:hover .gishoverinfo {pointer-events:none!important;display:inline-block!important}`,0)
 }
 
 if (gisversion > 1) {
@@ -1468,7 +1522,7 @@ var oldgis = {
         // var fullajaxblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
         
         // primary strategy for base64 images.. if not found use a backup
-        if (thumb.substring(0,4) === "data") {
+        if (thumb.substring(0,4) === "data" && !oldgis.data.json.realfullsize) {
           var jid = null
           try {
             // who knows if they will change things up randomly soon just prepare for whatever
@@ -1521,52 +1575,81 @@ var oldgis = {
             }
           }
         }
+        // extended method first try document.body.innerHTML if not found there then use ajaxblob
+        // if not found yet try the giant HTML blob before moving forwards
         
-        // very unreliable back up emergency strategy for these base64 images.. use the http link.. might result in wrong image :(
-        if (thumb.substring(0,4) === "data") {
-          if (gisdebugmode) {
-            console.log("21feb2020")
-          }
-          var revfound = false
+        var revfound = false
+        
+        if (thumb.substring(0,4) !== "data" && thumb.indexOf("encrypted-tbn") > -1 && !oldgis.data.json.realfullsize) {
           try {
             var qhblob = document.body.innerHTML
-            var searchlink = `${linkback}",`
+            var searchlink = `${thumb.split("=tbn")[1]}",`
             var index = qhblob.indexOf(searchlink)
+            if (index === -1) {
+              throw new Error("nosearchlink")
+            }
+            qhblob = qhblob.substring(index,qhblob.length)
+            qhblob = qhblob.substring(qhblob.indexOf("http"),qhblob.length)
+            var index = qhblob.indexOf(`"`)
+            if (index === -1) {
+              throw new Error("nosearchlink")
+            }
             qhblob = qhblob.substring(0,index)
-            var foundlarge = null
-            for (let i=qhblob.length-5;i>0;i--) {
-              if (qhblob[i] === `"`) {
-                var mef = qhblob.substring(i,i+5)
-                if (mef === `"http`) {
-                  qhblob = qhblob.substring(i,qhblob.length)
-                  var endlink = `",`
-                  index = qhblob.indexOf(endlink)
-                  if (index > -1) {
-                    qhblob = qhblob.substring(1,index)
-                    fullsize = qhblob
-                    revfound = true
-                  }
-                  break
-                }
-              }
-            }
-            if (revfound) {
-              gisfullconclusion()
-              return
-            }
-            else {
-              if (gisdebugmode) {
-                console.log("base64notfound")
-              }
-            }
+            revfound = true
+            fullsize = qhblob
+            // console.log("revfound true", fullsize)
+            
           }
           catch(e) {
             if (gisdebugmode) {
-              console.error("coudlnt resolve fullsize from html")
+              console.error(e)
             }
+          }        
+        }
+        
+        if (revfound) {
+          console.log("t28feb2020p1")
+          gisfullconclusion()
+          return
+        }  
+        
+        // try again with ajax
+        if (thumb.substring(0,4) !== "data" && thumb.indexOf("encrypted-tbn") > -1 && !oldgis.data.json.realfullsize) {
+          // comb thru ajax
+          try {
+            var qhblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
+            var searchlink = `${thumb.split("%3A")[1]}`
+            var index = qhblob.indexOf(searchlink)
+            if (index === -1) {
+              throw new Error("nosearchlink")
+            }
+            qhblob = qhblob.substring(index,qhblob.length)
+            qhblob = qhblob.substring(qhblob.indexOf("http"),qhblob.length)
+            var index = qhblob.indexOf(`"`)
+            if (index === -1) {
+              throw new Error("nosearchlink")
+            }
+            qhblob = qhblob.substring(0,index-1)
+            revfound = true
+            fullsize = qhblob
+            // console.log("revfound true", fullsize)
           }
+          catch(e) {
+            if (gisdebugmode) {
+              console.error(e)   
+            }            
+          }
+        }
+        
+        if (revfound) {
+          console.log("t28feb2020p2")
+          gisfullconclusion()
+          return
+        }
+
+        if (thumb.substring(0,4) === "data") {
           issuewiththumb = true
-        }    
+        }
 
         var searchingfor
         
@@ -1617,6 +1700,7 @@ var oldgis = {
             }
           }
         }
+        
         // this is a backup method and only works right now in chrome
         if (!oldgis.data.json.realfullsize) {
           // console.log("not yet full size need to find it")

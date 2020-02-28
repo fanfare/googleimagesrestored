@@ -26,8 +26,12 @@ unfortunately need to progressively load these now
   color:#f3efef!important
 }
 
-.h312td, .RtIwE {
-  width: 100%!important;
+.h312td {
+  display:none!important
+}
+
+.gishoverinfo {
+  width: calc(100% - 4px)!important;
   border-radius: 0!important;
   height: 15px!important;
   font-size: 11px!important;
@@ -37,4 +41,8 @@ unfortunately need to progressively load these now
   background: rgba(51,51,51,0.8)!important;
   padding: 0!important;
   padding-left: 4px!important;
+  position: absolute;
+  bottom: 42px;  
+  display:none;
+  left:0!important
 }
