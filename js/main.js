@@ -28,9 +28,6 @@ var sheet = (function() {
 
 let gisversion = 1
 
-
-
-
 if ( document.querySelectorAll(`div[data-ri="0"]`).length > 0 
   && document.querySelectorAll(`[jscontroller="Q7Rsec"]`).length === 0 ) {
   gisversion = 2
@@ -902,7 +899,6 @@ var oldgis = {
               try {
                 var result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz)`)[shuffle[i]]
                 var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
-                
                 var json = JSON.parse(meta)
                 var title = result.querySelectorAll(".mVDMnf")[0].innerHTML
                 var domain = json.st || json.isu
@@ -1182,7 +1178,6 @@ var oldgis = {
           }
         }
       }
-      
       var relatedimages = document.querySelectorAll(`.oldgisrelatedimage`)
       for (var i=0;i<8;i++) {
         relatedimages[i].innerHTML = ""
@@ -1328,7 +1323,6 @@ var oldgis = {
               }
               title = encodeURIComponent((match[1]).replace(/\\/g, "\\\\\\\\").replace(/"/g, `\\\\\\"`))            
               queryid = title
-
             }
             catch(e) {
 
@@ -1503,6 +1497,13 @@ var oldgis = {
       }
       
       if (gisversion > 1) {
+        
+        function qhunicode(string) {
+          //console.log(string)
+          string = string.replace(/\\u0026/gm,"&").replace(/\\u003d/gm,"=")
+          //console.log(string)
+          return string
+        }
 
         var issuewiththumb = false
         var thumb = fullsize
@@ -1516,10 +1517,6 @@ var oldgis = {
             moredetailsareabuttonsviewlink.href = fullsize            
           }
         }        
-        // TODO search this and then search the html
-        // var fullajaxblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
-        
-        // primary strategy for base64 images.. if not found use a backup
         if (thumb.substring(0,4) === "data" && !oldgis.data.json.realfullsize) {
           var jid = null
           try {
@@ -1548,7 +1545,6 @@ var oldgis = {
               console.error(e)
             }
           }
-
           if (jid) {
             try {
               var jindex = document.body.innerHTML.indexOf(`${jid}",`)
@@ -1562,7 +1558,7 @@ var oldgis = {
               if (gisdebugmode) {
                 console.log("24feb2020")
               }
-              fullsize = jscrub
+              fullsize = qhunicode(jscrub)
               gisfullconclusion()
               return                
             }
@@ -1575,7 +1571,6 @@ var oldgis = {
         }
         // extended method first try document.body.innerHTML if not found there then use ajaxblob
         // if not found yet try the giant HTML blob before moving forwards
-        
         var revfound = false
         
         if (thumb.substring(0,4) !== "data" && thumb.indexOf("encrypted-tbn") > -1 && !oldgis.data.json.realfullsize) {
@@ -1594,8 +1589,8 @@ var oldgis = {
             }
             qhblob = qhblob.substring(0,index)
             revfound = true
-            fullsize = qhblob
-            // console.log("revfound true", fullsize)
+            
+            fullsize = qhunicode(qhblob)
             
           }
           catch(e) {
@@ -1631,7 +1626,8 @@ var oldgis = {
             }
             qhblob = qhblob.substring(0,index-1)
             revfound = true
-            fullsize = qhblob
+            
+            fullsize = qhunicode(qhblob)
             // console.log("revfound true", fullsize)
           }
           catch(e) {
