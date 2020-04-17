@@ -318,11 +318,7 @@ var observer = new MutationObserver(function(mutations) {
 })
 
 observer.observe(document.getElementById("islrg"), {attributes: false, childList: true, characterData: false, subtree:true});
-
 // -- mutationobserver
-
-
-
 var classrgl = ".rg_l"
 if (gisversion > 1) {
   try {
@@ -361,8 +357,6 @@ if (gisversion === 1) {
 }
 
 if (gisversion > 1) {
-  // sheet.insertRule(`div[jscontroller="${jscontroller}"]:not(.nowhover):hover span {pointer-events:none!important;display:block!important}`,0)  
-  // sheet.insertRule(`div[jscontroller="${jscontroller}"]:not(.nowhover):hover ${classilmbg} {pointer-events:none!important;display:block!important}`,0)
   sheet.insertRule(`div[jscontroller="${jscontroller}"] ${classilmbg} {pointer-events:none!important;display:none!important}`,0)
   sheet.insertRule(`div[jscontroller="${jscontroller}"]:hover .gishoverinfo {pointer-events:none!important;display:inline-block!important}`,0)
 }
@@ -372,10 +366,9 @@ if (gisversion > 1) {
   sheet.insertRule(`.MSM1fd:hover .RtIwE {display:none}`,0)   
 }
 
+sheet.insertRule(`.islsp {pointer-events:none!important;opacity:0!important}`,0)
 sheet.insertRule(`.MSM1fd:hover .wXeWr {box-shadow:none}`,0)
-    
 sheet.insertRule(`body.exactgisopen #oldgisdetails {z-index:0}`,0)
-
 sheet.insertRule(`div[jscontroller="${jscontroller}"]:not(.nowhover):hover .rg_anbg {display:none!important}`,0)
 sheet.insertRule(`.nJGrxf span, .nJGrxf {pointer-events:none!important}`,0)
 sheet.insertRule(`g-loading-icon {display:none!important}`,0)
@@ -383,6 +376,7 @@ sheet.insertRule(`#rg {min-width: 95vw!important}`,0)
 sheet.insertRule(`a${classrgl} {pointer-events: none!important;-moz-pointer-events:none!important}`,0)
 sheet.insertRule(`div[jscontroller="${jscontroller}"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}`,0)
 sheet.insertRule(`div[jscontroller="KDx8xf"] {cursor: pointer;-moz-user-select:none!important;user-select:none!important}`,0)
+
 if (gisversion > 1) {
   sheet.insertRule(`span.MfLWbb.itb-st.Wlq9kf {display: none!important}`,0)
 }
@@ -2055,30 +2049,56 @@ function unloadnativeloop() {
   if (++expired > 1000) {
     return
   }
-  var activethumb
+  
+  
+  
+  var activethumb = null
+  var shadowtitlelink = null
+  // gisversion 1 is depreciated by now i assume
+  if (document.querySelector('.Beeb4e')) {
+    // shadowbox exists because a title is available
+    shadowtitlelink = document.querySelector('.Beeb4e').textContent
+    if (shadowtitlelink.length === 0) {
+      shadowtitlelink = document.querySelector('.Beeb4e').innerHTML
+    }
+    var firstelementtitlelink = null
+    // prob need nicer way of consistency for wgvvnb and beeb4e
+    if (document.querySelector('.WGvvNb')) {
+      // // weird false negatives it seems more reasonable to have false positives unfortunately
+      // firstelementtitlelink = document.querySelector('.WGvvNb').textContent.substring(0,20)
+      // if (firstelementtitlelink.length === 0) {
+      //   firstelementtitlelink = document.querySelector('.WGvvNb').innerHTML.substring(0,20)
+      // }
+      // if (shadowtitlelink.startsWith(firstelementtitlelink)) {
+        // // new scenario 2020 april 17
+        // // google images is making the first image in the grid be the 'match'
+        // // for thumbs found on normal google search
+        // // the active thumb is therefore the first item in the grid
+        // // but double check to make sure the text is the same
+        // // might produce false negatives, investigate further
+        // // provide two options
+        if (document.querySelector('.isv-r')) {
+          activethumb = document.querySelector('.isv-r')
+        }
+        else if (document.querySelector(`div[data-ri="0"]`)) {
+          activethumb = document.querySelector(`div[data-ri="0"]`)
+        }
+      //}
+    }
+  }
+  var closebox = null
   if (gisversion === 1) {
-    activethumb = document.getElementsByClassName('irc-s')[0]
+    closebox = document.getElementById("irc_ccbc")
   }
   else if (gisversion > 1) {
-    activethumb = document.querySelector(".IpBtuf")
-  }
-  if (activethumb) {
-    if (gisversion > 1) {
-      activethumb = document.querySelector(".IpBtuf").parentElement.parentElement
-    }
-
-    var closebox
-    if (gisversion === 1) {
-      closebox = document.getElementById("irc_ccbc")
-    }
-    else if (gisversion > 1) {
-      closebox = document.querySelector(".hm60ue")
-    }
-    if (closebox) {
-      closebox.click()
-      doubleback = true
-      // unfortunately that added a new history state
-      // remmeber this so when a user hits the back button later it will go back twice bypassing that new state
+    closebox = document.querySelector(".hm60ue")
+  }  
+  if (shadowtitlelink && closebox) {
+    closebox.click()
+    doubleback = true
+    // unfortunately that added a new history state
+    // remmeber this so when a user hits the back button later it will go back twice bypassing that new state
+    if (activethumb) {
       setTimeout(()=>{
         oldgis.thumb.enable(activethumb)
         setTimeout(()=>{
@@ -2089,7 +2109,7 @@ function unloadnativeloop() {
         },0)
       },0)
     }
-    return
+    return null
   }
   else {
     requestAnimationFrame(unloadnativeloop)
