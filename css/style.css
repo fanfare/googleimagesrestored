@@ -26,8 +26,13 @@ unfortunately need to progressively load these now
   color:#f3efef!important
 }
 
-.h312td {
+.h312td, .RtIwE {
   display:none!important
+}
+
+div .h312td {
+  display:none!important;
+  opacity:0!important
 }
 
 .gishoverinfo {
@@ -45,4 +50,7 @@ unfortunately need to progressively load these now
   bottom: 42px;  
   display:none;
   left:0!important
+}
+.isv-r {
+  pointer-events:none
 }

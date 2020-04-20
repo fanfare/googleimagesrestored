@@ -201,7 +201,6 @@ function gisipcprocess(gisipcblobid, gisipcblobdata) {
   }
   
   try {
-    
     var getCircularReplacer = () => {
       const seen = new WeakSet()
       return (key, value) => {
@@ -214,7 +213,6 @@ function gisipcprocess(gisipcblobid, gisipcblobdata) {
         return value
       }
     }
-    
     // text string of full window object
     let AgisXp = JSON.stringify(window, getCircularReplacer())
 
