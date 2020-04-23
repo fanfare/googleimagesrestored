@@ -1,4 +1,4 @@
-*Note 3 (Feb 2020) - added support for the version of google images that was causing this extension to break*
+*Note 4 (Apr 23 2020) - as of today this extension is still working on both Chrome and Firefox*
 
 Google Images Restored
 =====
