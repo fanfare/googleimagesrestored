@@ -1,5 +1,3 @@
-*Note 4 (Apr 23 2020) - as of today this extension is still working on both Chrome and Firefox*
-
 Google Images Restored
 =====
 ![Google Images Restored](https://i.imgur.com/wcAG1iw.png)
