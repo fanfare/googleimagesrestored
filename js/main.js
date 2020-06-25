@@ -1,3 +1,5 @@
+delete window.scrollToSelectedItemInline
+
 let googleimagesrestoredloaded = false
 
 function googleimagesrestored() {
@@ -371,7 +373,9 @@ function googleimagesrestored() {
 
   if (gisversion > 1) {
     sheet.insertRule(`div[data-id^="Refinements"] {display:none}`,0)   
-    sheet.insertRule(`.MSM1fd:hover .RtIwE {display:none}`,0)   
+    sheet.insertRule(`.MSM1fd:hover .RtIwE {display:none}`,0)
+    // related searches, june 25 2020
+    sheet.insertRule(`div[jscontroller="K3moCf"] {display:none}`,0)
   }
 
   sheet.insertRule(`.islsp {pointer-events:none!important;opacity:0!important}`,0)
@@ -765,7 +769,6 @@ function googleimagesrestored() {
         timer:null
       }
     },
-    
     jump: (next) => {
       var top = oldgisdetails.getBoundingClientRect().top
       var thumb = document.querySelectorAll("div.fmbrQQxz")[0]
@@ -787,7 +790,6 @@ function googleimagesrestored() {
       return
     },
     resize: (organic) => {
-      
       function routine() {
         calculateoffsets()
         document.getElementById("oldgisbottommargin").remove()
@@ -1497,19 +1499,13 @@ function googleimagesrestored() {
           moredetailsareabuttonsviewlink.href = fullsize
           moredetailsareabuttonsvisitlink.href = linkback 
         }
-        
         if (gisversion > 1) {
-          
           function qhunicode(string) {
-            //console.log(string)
             string = string.replace(/\\u0026/gm,"&").replace(/\\u003d/gm,"=")
-            //console.log(string)
             return string
           }
-
           var issuewiththumb = false
           var thumb = fullsize
-
           function gisfullconclusion() {
             oldgis.data.json.realfullsize = true
             oldgis.data.json.fullsize = fullsize
@@ -1571,12 +1567,9 @@ function googleimagesrestored() {
               }
             }
           }
-          
-          
           // extended method first try document.body.innerHTML if not found there then use ajaxblob
           // if not found yet try the giant HTML blob before moving forwards
           var revfound = false
-          
           if ( thumb.substring(0,4) !== "data" 
             && thumb.indexOf("encrypted-tbn") > -1 
             && !oldgis.data.json.realfullsize) {
@@ -1603,7 +1596,6 @@ function googleimagesrestored() {
               }
             }        
           }
-          
           if (revfound) {
             if (gisdebugmode) {
               console.log("t28feb2020p1")
@@ -1611,13 +1603,9 @@ function googleimagesrestored() {
             gisfullconclusion()
             return
           }  
-          
-          // try again with ajax
-          
           if ( thumb.substring(0,4) !== "data" 
             && thumb.indexOf("encrypted-tbn") > -1 
             && !oldgis.data.json.realfullsize ) {
-            // comb thru ajax
             try {
               // april 19
               var qhblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
@@ -1635,9 +1623,7 @@ function googleimagesrestored() {
               }
               qhblob = qhblob.substring(0,index-1)
               revfound = true
-              
               fullsize = qhunicode(qhblob)
-              // console.log("revfound true", fullsize)
             }
             catch(e) {
               if (gisdebugmode) {
@@ -1653,16 +1639,13 @@ function googleimagesrestored() {
             gisfullconclusion()
             return
           }
-
           if (thumb.substring(0,4) === "data") {
             if (gisdebugmode) {
               console.log("thumbissue-data-type-a")
             }          
             issuewiththumb = true
           }
-
           var searchingfor
-          
           function searchforfullsizeandproceed(activegisuniqueid, count) {
             if (count > 200) {
               if (activegisuniqueid === gisuniqueid) {
@@ -1696,37 +1679,23 @@ function googleimagesrestored() {
                   searchforfullsizeandproceed(activegisuniqueid, count)
                 },10)
               }
-              else {
-                // console.log("gis unique uid changed dont continue!!")
-                // console.log(`${activegisuniqueid} ${gisuniqueid}`)
-              }
             }
             else {
               if (activegisuniqueid === gisuniqueid) {
                 gisfullconclusion()
               }
-              else {
-                // console.log("found but gis has changed")
-              }
             }
           }
-          
           // this is a backup method and only works right now in chrome
           if (!oldgis.data.json.realfullsize) {
-            // console.log("not yet full size need to find it")
             gisuniqueid = (+ new Date())
             var encurl = thumb
             searchingfor = encurl
-            // console.log(gisuniqueid, encurl)
-            // async DOM crawl.. try simple time-based callback
             if (!issuewiththumb) {
-              // console.log("no issue with thumba")
               findfullsizeimagefromencurl(gisuniqueid, encurl)
             }
             if (!issuewiththumb) {
-              // console.log("no issuewiththumbb")
               setTimeout(()=>{
-                // console.log("search for full size and proceed from null timeout")
                 searchforfullsizeandproceed(gisuniqueid, 0)
               },0)
               return
@@ -1738,9 +1707,7 @@ function googleimagesrestored() {
               return
             }
           }
-          
         }
-        
         return
       },
       renew: () => {
@@ -1809,7 +1776,6 @@ function googleimagesrestored() {
           var id   
           let meta
           if (gisversion === 1) {
-            
             meta = document.querySelectorAll("div.fmbrQQxz .rg_meta")[0]
             if (meta) {
               meta = meta.innerHTML
@@ -1829,10 +1795,6 @@ function googleimagesrestored() {
             if (document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0]) {
               title = document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0].innerHTML
             }
-            else {
-              // console.log("mvdmnf not found.. something else needed..")
-              // console.log("the title wasnt able to be propagated")
-            }
           }
           else {
             meta = document.querySelectorAll("div.fmbrQQxz")[0]
@@ -1844,25 +1806,21 @@ function googleimagesrestored() {
                 linkbackhref = document.querySelectorAll("div.fmbrQQxz a")[i].href          
                 try {
                   classwgvvnb = `.${document.querySelectorAll("div.fmbrQQxz a")[i].children[0].children[0].classList[0]}`
-                  //console.log(classwgvvnb)
                 }
                 catch(e) {
-                  //console.log("no problem")
+
                 }
                 break
               }
             }
             
             thumb = document.querySelectorAll("div.fmbrQQxz img")[0].dataset.iurl
-            
             if (!thumb) {
               thumb = document.querySelectorAll("div.fmbrQQxz img")[0].dataset.src
             }
-            
             if (!thumb) {
               thumb = document.querySelectorAll("div.fmbrQQxz img")[0].src
             }
-            
             fullsize = thumb
             linkback = linkbackhref
             var etmp = document.createElement ('a')
@@ -2064,41 +2022,56 @@ function googleimagesrestored() {
   var doubleback = false
 
   function unloadnativeloop() {
+    
     if (++expired > 1000) {
       return
     }
     var activethumb = null
     var shadowtitlelink = null
-    // gisversion 1 is depreciated by now i assume
-    if (document.querySelector('.Beeb4e')) {
-      // shadowbox exists because a title is available
+    let conditiontosatisfy = null
+    if (expired > 500) {
+      conditiontosatisfy = document.querySelector('.Beeb4e')
+    }
+    else {
+      conditiontosatisfy = document.querySelector('.Beeb4e') && document.querySelector('.YcWSDf')
+    }
+    if (conditiontosatisfy) {
       shadowtitlelink = document.querySelector('.Beeb4e').textContent
       if (shadowtitlelink.length === 0) {
         shadowtitlelink = document.querySelector('.Beeb4e').innerHTML
+      }      
+      try {
+        if (document.querySelector('.YcWSDf')) {
+          var ycwsdf = document.querySelector('.YcWSDf')
+          if ( ycwsdf 
+            && ycwsdf.parentElement 
+            && ycwsdf.parentElement.dataset.ri ) {
+            activethumb = ycwsdf.parentElement
+          }
+          else if ( ycwsdf 
+            && ycwsdf.parentElement 
+            && ycwsdf.parentElement.parentElement 
+            && ycwsdf.parentElement.parentElement.dataset.ri ) {
+            activethumb = ycwsdf.parentElement.parentElement
+          }
+          if (activethumb && ycwsdf) {
+            ycwsdf.remove()
+          }
+        }
+        else {
+          
+        }
       }
-      var firstelementtitlelink = null
-      // prob need nicer way of consistency for wgvvnb and beeb4e
-      if (document.querySelector('.WGvvNb')) {
-        // // weird false negatives it seems more reasonable to have false positives unfortunately
-        // firstelementtitlelink = document.querySelector('.WGvvNb').textContent.substring(0,20)
-        // if (firstelementtitlelink.length === 0) {
-        //   firstelementtitlelink = document.querySelector('.WGvvNb').innerHTML.substring(0,20)
-        // }
-        // if (shadowtitlelink.startsWith(firstelementtitlelink)) {
-          // // new scenario 2020 april 17
-          // // google images is making the first image in the grid be the 'match'
-          // // for thumbs found on normal google search
-          // // the active thumb is therefore the first item in the grid
-          // // but double check to make sure the text is the same
-          // // might produce false negatives, investigate further
-          // // provide two options
-          if (document.querySelector('.isv-r')) {
-            activethumb = document.querySelector('.isv-r')
-          }
-          else if (document.querySelector(`div[data-ri="0"]`)) {
-            activethumb = document.querySelector(`div[data-ri="0"]`)
-          }
-        //}
+      catch(e) {
+        console.error(e)
+      }
+      if (!activethumb) {  
+        if (document.querySelector('.isv-r')) {
+          activethumb = document.querySelector('.isv-r')
+        }
+        else if (document.querySelector(`div[data-ri="0"]`)) {
+          activethumb = document.querySelector(`div[data-ri="0"]`)
+        }
       }
     }
     var closebox = null
@@ -2112,7 +2085,8 @@ function googleimagesrestored() {
       closebox.click()
       doubleback = true
       // unfortunately that added a new history state
-      // remmeber this so when a user hits the back button later it will go back twice bypassing that new state
+      // remmeber this so when a user hits the back button later
+      // it will go back twice bypassing that new state
       if (activethumb) {
         setTimeout(()=>{
           oldgis.thumb.enable(activethumb)
