@@ -1,5 +1,3 @@
-*Note 3 (Feb 2020) - added support for the version of google images that was causing this extension to break*
-
 Google Images Restored
 =====
 ![Google Images Restored](https://i.imgur.com/wcAG1iw.png)
