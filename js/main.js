@@ -1244,13 +1244,11 @@ function googleimagesrestored() {
             url = url.replace(/(\r\n|\n|\r| )/gm, "")
             var xhr = new XMLHttpRequest()
             xhr.open('GET', url, true)
-            console.log("reached")
             xhr.onload = function() {
               if (this.status >= 200 && this.status < 400) {
                 var blob = this.response
                 propagate(blob)
               }
-              console.log("xhronload")
             }
             xhr.onerror = function() {
               if (gisdebugmode) {
@@ -1840,10 +1838,17 @@ function googleimagesrestored() {
               title = document.querySelectorAll(`div.fmbrQQxz ${classwgvvnb}`)[0].innerText
             }
             catch(e) {
-              if (gisdebugmode) {
-                console.log("couldnt find the title")
+
+            }
+            try {
+              if (title.length === 0 || title === "" || title === edomain) {
+                title = document.querySelectorAll(`div.fmbrQQxz .WGvvNb`)[0].title
               }
             }
+            catch(e) {
+
+            }
+            title = title.length > 57 ? title.substring(0,57) + " ..." : title
             id = null
             try {
               id = document.querySelectorAll("div.fmbrQQxz")[0].dataset.tbnid           
