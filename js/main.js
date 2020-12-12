@@ -779,7 +779,11 @@ function googleimagesrestored() {
       var off = next ? 1 : -1
       var jumpthumb = document.querySelectorAll(`div[jscontroller="${jscontroller}"][data-ri="${position+off}"]`)[0]
       if (!jumpthumb) {
-        return
+        off = next ? 2 : -2
+        jumpthumb = document.querySelectorAll(`div[jscontroller="${jscontroller}"][data-ri="${position+off}"]`)[0]
+        if (!jumpthumb) {
+          return
+        }
       }
       oldgis.thumb.disable()
       oldgis.thumb.enable(jumpthumb)    

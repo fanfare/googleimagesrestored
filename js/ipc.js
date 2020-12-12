@@ -32,7 +32,7 @@ var imagepoolfromallresponsestext = ""
         }
       }
       catch(e) {
-        console.error(e)
+        console.log(e)
       }
     }, false)
     open.call(this, a, b, c, d, e)
@@ -77,7 +77,7 @@ function gisipcprocess(gisipcblobid, gisipcblobdata) {
     }
   }
   catch(e) {
-    console.error("primary fullsize method not found.. onward")
+    console.log("primary fullsize method not found.. onward")
   }
   
   if (realfullsizeimage !== null) {
@@ -238,7 +238,7 @@ function gisipcprocess(gisipcblobid, gisipcblobdata) {
       return
     }
     catch(e) {
-      console.error(e)
+      console.log(e)
       // console.log("couldnt find the real url with this scheme.. try the other scheme")
       throw new Error(e)
     }
