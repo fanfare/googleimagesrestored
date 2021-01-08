@@ -6,12 +6,12 @@ function googleimagesrestored() {
   if (googleimagesrestoredloaded) {
     return
   }
-  googleimagesrestoredloaded = false
+  googleimagesrestoredloaded = true
 
   const atobUTF8=function(){"use strict";function h(b){var a=b.charCodeAt(0)<<24,d=k(~a),c=0,f=b.length,e="";if(5>d&&f>=d){a=a<<d>>>24+d;for(c=1;c<d;++c)a=a<<6|b.charCodeAt(c)&63;65535>=a?e+=g(a):1114111>=a?(a-=65536,e+=g((a>>10)+55296,(a&1023)+56320)):c=0}for(;c<f;++c)e+="\ufffd";return e}var l=Math.log,m=Math.LN2,k=Math.clz32||function(b){return 31-l(b>>>0)/m|0},g=String.fromCharCode,n=atob;return function(b,a){a||"\u00ef\u00bb\u00bf"!==b.substring(0,3)||(b=b.substring(3));return n(b).replace(/[\xc0-\xff][\x80-\xbf]*/g,
   h)}}();
 
-  var gisdebugmode = true
+  var gisdebugmode = false
 
   let gisuniqueid
 
