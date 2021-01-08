@@ -6,12 +6,12 @@ function googleimagesrestored() {
   if (googleimagesrestoredloaded) {
     return
   }
-  googleimagesrestoredloaded = true
+  googleimagesrestoredloaded = false
 
   const atobUTF8=function(){"use strict";function h(b){var a=b.charCodeAt(0)<<24,d=k(~a),c=0,f=b.length,e="";if(5>d&&f>=d){a=a<<d>>>24+d;for(c=1;c<d;++c)a=a<<6|b.charCodeAt(c)&63;65535>=a?e+=g(a):1114111>=a?(a-=65536,e+=g((a>>10)+55296,(a&1023)+56320)):c=0}for(;c<f;++c)e+="\ufffd";return e}var l=Math.log,m=Math.LN2,k=Math.clz32||function(b){return 31-l(b>>>0)/m|0},g=String.fromCharCode,n=atob;return function(b,a){a||"\u00ef\u00bb\u00bf"!==b.substring(0,3)||(b=b.substring(3));return n(b).replace(/[\xc0-\xff][\x80-\xbf]*/g,
   h)}}();
 
-  var gisdebugmode = false
+  var gisdebugmode = true
 
   let gisuniqueid
 
@@ -376,6 +376,8 @@ function googleimagesrestored() {
     sheet.insertRule(`.MSM1fd:hover .RtIwE {display:none}`,0)
     // related searches, june 25 2020
     sheet.insertRule(`div[jscontroller="K3moCf"] {display:none}`,0)
+    // related searches, jan 7 2021
+    sheet.insertRule(`div[jscontroller="ewR3bd"] {display:none}`,0)
   }
 
   sheet.insertRule(`.islsp {pointer-events:none!important;opacity:0!important}`,0)
@@ -1501,6 +1503,8 @@ function googleimagesrestored() {
           moredetailsareabuttonsviewlink.href = fullsize
           moredetailsareabuttonsvisitlink.href = linkback 
         }
+        
+        
         if (gisversion > 1) {
           function qhunicode(string) {
             string = string.replace(/\\u0026/gm,"&").replace(/\\u003d/gm,"=")
@@ -1569,19 +1573,28 @@ function googleimagesrestored() {
               }
             }
           }
+          
           // extended method first try document.body.innerHTML if not found there then use ajaxblob
           // if not found yet try the giant HTML blob before moving forwards
           var revfound = false
+          
+          
+          
           if ( thumb.substring(0,4) !== "data" 
+          
             && thumb.indexOf("encrypted-tbn") > -1 
             && !oldgis.data.json.realfullsize) {
+              
+              
             try {
               var qhblob = document.body.innerHTML
               var searchlink = `${thumb.split("=tbn")[1].replace(/\&/g, "\\u0026").replace(/\=/g, "\\u003d")}",`
               var index = qhblob.indexOf(searchlink)
+              
               if (index === -1) {
                 throw new Error("nosearchlink-type-a")
               }
+              
               qhblob = qhblob.substring(index,qhblob.length)
               qhblob = qhblob.substring(qhblob.indexOf("http"),qhblob.length)
               var index = qhblob.indexOf(`"`)
@@ -1596,22 +1609,67 @@ function googleimagesrestored() {
               if (gisdebugmode) {
                 console.error(e)
               }
-            }        
+            }   
+
+            
           }
+          
+          
+          
           if (revfound) {
             if (gisdebugmode) {
               console.log("t28feb2020p1")
             }
             gisfullconclusion()
             return
-          }  
+          }
+          
           if ( thumb.substring(0,4) !== "data" 
             && thumb.indexOf("encrypted-tbn") > -1 
             && !oldgis.data.json.realfullsize ) {
+              
             try {
-              // april 19
+              // april 19 2020
               var qhblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
-              var searchlink = `${thumb.split("%3A")[1].split("&")[0]}`
+              
+              if (gisdebugmode) {
+                // jan 7 2021
+                console.log("apr 19 ajaxcontent", qhblob)
+                console.log("thumbpath", thumb)
+              }
+              var searchlink
+              let searchlinkfound = false
+              try {
+                searchlink = `${thumb.split("%3A")[1].split("&")[0]}`
+                searchlinkfound = true
+                if (gisdebugmode) {
+                  console.log("%3A-19APR2020", searchlink)
+                }
+              }
+              catch(e) {
+                if (gisdebugmode) {
+                  console.error("no-%3A-searchlink19apr2020")
+                }
+              }
+              if (!searchlinkfound) {
+                try {
+                  // https://encrypted-tbn0.gstatic.com/images?q=tbn:RANDOMSTRING&usqp=CAU
+                  searchlink = `${thumb.split("tbn:")[1].split("&")[0]}`
+                  searchlinkfound = true
+                  if (gisdebugmode) {
+                    console.log(":-7JAN2021", searchlink)
+                  }
+                }
+                catch(e) {
+                  if (gisdebugmode) {
+                    console.error("no-:-searchlink7jan2021")
+                  }                  
+                }
+              }
+              if (!searchlinkfound) {
+                throw new Error("nosearchlink-type-e")
+              }
+              
               var index = qhblob.indexOf(searchlink)
               if (index === -1) {
                 throw new Error("nosearchlink-type-c")
@@ -1632,6 +1690,7 @@ function googleimagesrestored() {
                 console.error(e)   
               }            
             }
+            
           }
           
           if (revfound) {
