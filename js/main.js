@@ -287,7 +287,6 @@ function googleimagesrestored() {
   }
 
   // mutationobserver --
-
   // new jscontroller elements to append size stats
 
   let lastthumbcount = 0
@@ -317,7 +316,6 @@ function googleimagesrestored() {
         }
       }
     }
-    //console.log(notmarked)
   }
 
   propagatesizeinfo()
@@ -758,10 +756,8 @@ function googleimagesrestored() {
     <div id="oldgisbuttonnext" class="oldgisbuttonnext"></div>
   `
   var oldgis = {
-    
     // oldgis.data.json sample
     // "{"fullsize":"https://www.alimentarium.org/en/system/files/thumbnails/image/AL027-01_pomme_de_terre_0.jpg","linkback":"https://www.alimentarium.org/en/knowledge/potato","thumb":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa30eF_kHneZfVuGyY2ppZl-yDNqa6W6_CVPMlZRxPqZQ4CcHM&s","domain":"alimentarium.org","width":"1008","height":"504","title":"Potato | Alimentarium"}"    
-    
     data: {
       thumb: false,
       details: false,
@@ -885,7 +881,6 @@ function googleimagesrestored() {
           else if (gisversion > 1) {
             thumb = `<div class="oldgisrelatedthumbdata oldgisrelatedcurrentselection" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${oldgis.data.json.thumb})" data-title="${oldgis.data.json.title}" data-domain="${oldgis.data.json.domain}" data-width="${oldgis.data.json.width}" data-height="${oldgis.data.json.height}" data-thumb="${oldgis.data.json.thumb}" data-fullsize="${oldgis.data.json.fullsize}" data-linkback="${oldgis.data.json.linkback}" data-realfullsize="true" data-thumbuid="${oldgis.data.json.id}"></div>`          
           }
-          
           var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="0"]`)[0]
           insertion.innerHTML = thumb         
           if (gisversion === 1) {
@@ -912,6 +907,9 @@ function googleimagesrestored() {
                   var meta = result.querySelectorAll(".rg_meta")[0].innerHTML
                   var json = JSON.parse(meta)
                   var title = result.querySelectorAll(".mVDMnf")[0].innerHTML
+                  if (gisdebugmode) {
+                    console.error("propagating", result)
+                  }
                   var domain = json.st || json.isu
                   var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
                   var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i+1}"]`)[0]
@@ -962,7 +960,7 @@ function googleimagesrestored() {
               var p = blob
               var pstart = p.indexOf("[[")
               if (pstart === -1) {
-                throw new Error("less than one")
+                throw new Error("less than one indexof [[")
               }            
               p = p.slice(pstart+1)
               p = p.split("\n")
@@ -1057,6 +1055,9 @@ function googleimagesrestored() {
               
             }
             if (related.length === 0) {
+              if (gisdebugmode) {
+                console.error("relatedlengthzero")
+              }
               var other = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz)`)
               var target = other.length
               target = target > 7 ? 7 : target
@@ -1106,17 +1107,17 @@ function googleimagesrestored() {
                   thumbid = result.dataset.tbnid || result.dataset.id
                   thumblinkback = "http://google.com"
                   var atarget = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) a`).length
-                  var classwgvvnb = ".WGvvNb"
+                  var backupinnertext = ""
                   for (let i=0;i<atarget;i++) {
-                    if (document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) a`)[i].href) {
-                      thumblinkback = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) a`)[i].href          
-                      try {
-                        var gmevne = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) a`)[i].children[0].children[0].classList[0]
-                        classwgvvnb = `.${gmevne}`
+                    let qtlk = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) a`)[i]
+                    if (qtlk.href) {
+                      if (qtlk.dataset && qtlk.dataset.title && qtlk.dataset.title.length > 0) {
+                        backupinnertext = qtlk.dataset.title
                       }
-                      catch(e) {
-
+                      else if (qtlk.innerText && qtlk.innerText.length > 0) {
+                        backupinnertext = qtlk.innerText
                       }
+                      thumblinkback = qtlk.href  
                       break
                     }
                   }
@@ -1127,7 +1128,6 @@ function googleimagesrestored() {
                   if (!thumbthumb) {
                     thumbthumb = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) img`)[0].src
                   }
-                  
                   thumbfullsize = thumbthumb
                   var etmp = document.createElement ('a')
                   etmp.href = thumblinkback
@@ -1139,12 +1139,12 @@ function googleimagesrestored() {
                     edomain = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) .fxgdke`)[0].innerText
                   }
                   thumbdomain = edomain
-                  var thumbtitle = edomain
-                  try {
-                    thumbtitle = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) ${classwgvvnb}`)[0].innerText
+                  var thumbtitle = backupinnertext
+                  if (thumbtitle.length === 0) {
+                    thumbtitle = edomain
                   }
-                  catch(e) {
-
+                  if (thumbtitle.length > 48) {
+                    thumbtitle = thumbtitle.substring(0,44) + " ..."
                   }
                   var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${thumbthumb})" data-title="${thumbtitle}" data-domain="${thumbdomain}" data-width="${thumbwidth}" data-height="${thumbheight}" data-thumb="${thumbthumb}" data-fullsize="${thumbfullsize}" data-linkback="${thumblinkback}" data-realfullsize="false" data-thumbuid="${thumbid}"></div>`
                   var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i+1}"]`)[0]
@@ -1266,17 +1266,30 @@ function googleimagesrestored() {
           }
           else {
             function xhrprocess(posturl, params, successcallback, errorcallback) {
+
               var request = new XMLHttpRequest()
               posturl = posturl.replace(/(\r\n|\n|\r| )/gm, "")
+              if (gisdebugmode) {
+                console.error("requesting from", posturl, params)
+              }              
               request.onreadystatechange = function() {
                 if (this.readyState == 4) {
-                  if (this.status == 200) {
+                  if (this.status == 200 || this.status === 0) {
+                    
+                    if (gisdebugmode) {
+                      console.error("this status ok", this.status, "thisresponsetext", this.responseText)
+                    }
                     successcallback(this.responseText)
                   }
                   else {
                     if (gisdebugmode) {
-                      console.error(posturl)
-                      console.error(params)
+                      console.error("errV", this.status, posturl, params)
+                      if (this && this.responseText) {
+                        console.error("errL", this.responseText)
+                      }
+                      else {
+                        console.error("noresponsetext")
+                      }
                     }
                     errorcallback(this.status)
                   }
@@ -1324,7 +1337,7 @@ function googleimagesrestored() {
               var queryid = "a"
               try {
                 var title = document.title
-                var regex = /(.*) \- Google Search$/
+                var regex = /(.*) (\-|\–) Google .*$/
                 var match = regex.exec(title)
                 if (!match) {
                   throw new Error("no match")
@@ -1334,6 +1347,9 @@ function googleimagesrestored() {
               }
               catch(e) {
 
+              }
+              if (gisdebugmode) {
+                console.error("queryid", queryid)
               }
               var rpcids = "phEE8d"
               function randint(min, max) {
@@ -1368,12 +1384,28 @@ function googleimagesrestored() {
                   console.error("dont use aaaat")
                 }
               }
+              
+              let defaulthostname = window.location.hostname
+              
+              var geolang = "en-US"
+              try {
+                let elang = document.getElementsByTagName("html")[0].lang
+                if (elang !== "en") {
+                  geolang = elang
+                }
+              }
+              catch(e) {
+                if (gisdebugmode) {
+                  console.error("en-US")
+                }
+              }
+              
               var url = `
-              https://www.google.com/_/VisualFrontendUi/data/batchexecute
+              https://${defaulthostname}/_/VisualFrontendUi/data/batchexecute
                 ?rpcids=${rpcids}
                 &f.sid=${fsid}
                 &bl=boq_visualfrontendserver_20200131.02_p0
-                &hl=en-US
+                &hl=${geolang}
                 &authuser
                 &soc-app=162
                 &soc-platform=1
@@ -1573,18 +1605,13 @@ function googleimagesrestored() {
               }
             }
           }
-          
           // extended method first try document.body.innerHTML if not found there then use ajaxblob
           // if not found yet try the giant HTML blob before moving forwards
           var revfound = false
-          
-          
-          
           if ( thumb.substring(0,4) !== "data" 
           
             && thumb.indexOf("encrypted-tbn") > -1 
             && !oldgis.data.json.realfullsize) {
-              
               
             try {
               var qhblob = document.body.innerHTML
@@ -1610,12 +1637,7 @@ function googleimagesrestored() {
                 console.error(e)
               }
             }   
-
-            
           }
-          
-          
-          
           if (revfound) {
             if (gisdebugmode) {
               console.log("t28feb2020p1")
@@ -1623,15 +1645,12 @@ function googleimagesrestored() {
             gisfullconclusion()
             return
           }
-          
           if ( thumb.substring(0,4) !== "data" 
             && thumb.indexOf("encrypted-tbn") > -1 
             && !oldgis.data.json.realfullsize ) {
-              
             try {
               // april 19 2020
               var qhblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
-              
               if (gisdebugmode) {
                 // jan 7 2021
                 console.log("apr 19 ajaxcontent", qhblob)
@@ -1690,9 +1709,7 @@ function googleimagesrestored() {
                 console.error(e)   
               }            
             }
-            
           }
-          
           if (revfound) {
             if (gisdebugmode) {
               console.log("t28feb2020p2")
