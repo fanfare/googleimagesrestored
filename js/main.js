@@ -1514,15 +1514,43 @@ function googleimagesrestored() {
         swapbox.style.width = `${Math.round(destwidth)}px`
         swapbox.style.height = `${Math.round(destheight)}px`
         swapbox.style.display = "block"
+        function resumexatt() {
+          try {
+            if (swapbox && swapbox.attributes) {
+              let xattributes = Object.values(swapbox.attributes)
+              for (let rp=0;rp<xattributes.length;rp++) {
+                let xattribute = xattributes[rp].localName
+                if (![
+                  "src", 
+                  "class", 
+                  "style", 
+                  "data-atf", 
+                  "data-iml", 
+                  "width", 
+                  "height"
+                ].includes(xattribute)) {
+                  swapbox.removeAttribute(xattribute)
+                }
+              }
+            }
+          }
+          catch(e) {
+            if (gisdebugmode) {
+              console.error(e)
+            }
+          }
+        }
         // checkerboard 
         swapbox.onload = (e) => {
           boxholder.style.background = `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUAQMAAAC3R49OAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAGUExURf///+rq6hX5lggAAAAUSURBVAjXY2Cw/8BADP5/gIEYDAAkgh1NOfT7DQAAAABJRU5ErkJggg==)`
           boxholder.style.backgroundSize = "20px 20px"
+          resumexatt()
         }
         swapbox.onerror = () => {
           boxholder.style.background = `url(${json.thumb})`
           boxholder.style.backgroundSize = `${boxholder.style.width} ${boxholder.style.height}`
           swapbox.style.display = "none"
+          resumexatt()
         }
         swapbox.src = fullsize
         if (update) {
