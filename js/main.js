@@ -2113,21 +2113,29 @@ function googleimagesrestored() {
       }
       return
     }
-    e.stopPropagation()
-    if (!oldgis.data.thumb) {
-      return
+    if (oldgis.data.thumb) {
+      if (e.keyCode === 38 || e.keyCode === 40) {
+        e.stopPropagation()
+        return null
+      }
+      if (e.keyCode === 39) {
+        e.stopPropagation()
+        oldgis.jump(true)
+      }
+      else if (e.keyCode === 37) {
+        e.stopPropagation()   
+        oldgis.jump(false)
+      }
+      else if (e.keyCode === 27) {
+        e.stopPropagation()
+        oldgis.power.off()
+      }
     }
-    if (e.keyCode === 39) {
-      e.stopPropagation()
-      oldgis.jump(true)
-    }
-    else if (e.keyCode === 37) {
-      e.stopPropagation()   
-      oldgis.jump(false)
-    }
-    else if (e.keyCode === 27) {
-      e.stopPropagation()
-      oldgis.power.off()
+    else {
+      if (e.keyCode >= 37 && e.keyCode <= 40) {
+        e.stopPropagation()
+        return null
+      }
     }
   }, true);
 
