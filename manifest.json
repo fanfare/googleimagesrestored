@@ -1,7 +1,7 @@
 {
   "author": "fanfare",
   "name": "Google Images Restored",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "manifest_version": 2,
   "description": "Restores Google Images to how it appeared before August 6, 2019",
   "homepage_url": "https://github.com/fanfare/googleimagesrestored",
@@ -14,7 +14,7 @@
   },
   "default_locale": "en",
   "content_scripts": [ {
-    "include_globs": [ "*tbm=isch*", "*imgres?*" ],
+    "include_globs": [ "*tbm=isch*" ],
     "css": ["css/style.css"],
     "js": [ "js/main.js" ],
     "run_at": "document_start",

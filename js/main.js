@@ -412,6 +412,22 @@ function googleimagesrestored() {
   sheet.insertRule('.eJXyZe {display:none!important}',0)
   sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`,0)
   sheet.insertRule(`body.exactgisopen .fmbrQQxz::before {z-index:0}`,0)
+  
+  // 2021 APR 10
+  // images on when searching by 'all sizes' for the same image no longer show
+  // the image size on all of the thumbnails. this allows a user to
+  // ctrl+click on the google logo to show all of the image sizes on all of the images.
+  sheet.insertRule(`body.forceshowgishoverinfo div[jscontroller="${jscontroller}"] .gishoverinfo {pointer-events:none!important;display:inline-block!important}`,0)
+  let siclick = document.querySelector(`a.F1hUFe`)
+  if (siclick) {
+    siclick.addEventListener('click', (e)=>{
+      if (e.ctrlKey) {
+        e.preventDefault()
+        e.stopPropagation()
+        document.body.classList.toggle('forceshowgishoverinfo')
+      }
+    })
+  }    
 
   var urlsizeparamswap = (append) => {
     if (gisversion === 1) {
