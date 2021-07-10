@@ -1,3 +1,5 @@
+// ublock filter to hide sticky header: www.google.com##.DU1Mzb
+
 delete window.scrollToSelectedItemInline
 
 let googleimagesrestoredloaded = false
@@ -185,7 +187,7 @@ function googleimagesrestored() {
             }
             else {
               if (gisdebugmode) {
-                console.error("exact size already exists")
+                console.log("exact size already exists")
               }
             }
           }
@@ -324,7 +326,8 @@ function googleimagesrestored() {
     setTimeout(()=>{propagatesizeinfo(),500})
   })
 
-  observer.observe(document.getElementById("islrg"), {attributes: false, childList: true, characterData: false, subtree:true});
+  observer.observe(document.getElementById("islrg"), {attributes: false, childList: true, characterData: false, subtree:true})
+  
   // -- mutationobserver
   var classrgl = ".rg_l"
   if (gisversion > 1) {
@@ -518,7 +521,6 @@ function googleimagesrestored() {
           window.location.href = target
         }
         else if (gisversion > 1) {
-
           return
         }
       }
@@ -827,6 +829,7 @@ function googleimagesrestored() {
         var thisheight = document.querySelectorAll('div.fmbrQQxz')[0].offsetHeight
         var absolutetop = fulltop + thistop + thisheight + realpaddingbottom
         var oldgisdetails = document.getElementById("oldgisdetails")
+        console.log("resize", fulltop, thistop, thisheight, realpaddingbottom)
         oldgisdetails.style.top = `${absolutetop}px`
       }
       if (organic) {
@@ -860,7 +863,7 @@ function googleimagesrestored() {
         }
         if (!meta) {
           if (gisdebugmode) {
-            console.error("couldnt override@@@")
+            console.log("couldnt override@@@")
           }
           return
         }
@@ -924,7 +927,7 @@ function googleimagesrestored() {
                   var json = JSON.parse(meta)
                   var title = result.querySelectorAll(".mVDMnf")[0].innerHTML
                   if (gisdebugmode) {
-                    console.error("propagating", result)
+                    console.log("propagating", result)
                   }
                   var domain = json.st || json.isu
                   var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${json.tu})" data-title="${title}" data-domain="${domain}" data-width="${json.ow}" data-height="${json.oh}" data-thumb="${json.tu}" data-fullsize="${json.ou}" data-linkback="${json.ru}" data-thumbuid="${json.id}"></div>`
@@ -967,7 +970,6 @@ function googleimagesrestored() {
               }    
             }
           }
-          
           else if (gisversion > 1) {
             var related = []
             var seemorelink = false
@@ -977,10 +979,21 @@ function googleimagesrestored() {
               var pstart = p.indexOf("[[")
               if (pstart === -1) {
                 throw new Error("less than one indexof [[")
-              }            
+              }
+              if (gisdebugmode) {
+                console.log("pstart", pstart)
+              }
               p = p.slice(pstart+1)
               p = p.split("\n")
+              // change july 9, 2021 - old had ] this has ]]
               p = p[0]
+              if (gisdebugmode) {
+                console.log("jul9,2021,p", p)
+              }
+              if (p.slice(-2) === "]]") {
+                // july 9, 2021 - ]] fix
+                p = p.slice(0,-1)
+              }
               var awfulblob = (JSON.parse(p))[2]
               var newblob = (JSON.parse(awfulblob))[0]
               var newarray = []
@@ -1044,6 +1057,11 @@ function googleimagesrestored() {
             }
             catch(e) {
               if (gisdebugmode) {
+                // typically, this should not reach here if valid JSON
+                // has been served by the server. this can catch if
+                // there are no related images and there's nothing to do..
+                // but if there ARE images, it should not reach here
+                // and if it does reach here, there is a bug in the JSON.
                 console.error(e)
               }
               related = []
@@ -1072,7 +1090,7 @@ function googleimagesrestored() {
             }
             if (related.length === 0) {
               if (gisdebugmode) {
-                console.error("relatedlengthzero")
+                console.log("relatedlengthzero")
               }
               var other = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz)`)
               var target = other.length
@@ -1274,7 +1292,7 @@ function googleimagesrestored() {
             }
             xhr.onerror = function() {
               if (gisdebugmode) {
-                console.error("error")
+                console.log("error")
               }
               console.log("xhronerror")
             } 
@@ -1286,25 +1304,24 @@ function googleimagesrestored() {
               var request = new XMLHttpRequest()
               posturl = posturl.replace(/(\r\n|\n|\r| )/gm, "")
               if (gisdebugmode) {
-                console.error("requesting from", posturl, params)
+                console.log("requesting from", posturl, params)
               }              
               request.onreadystatechange = function() {
                 if (this.readyState == 4) {
                   if (this.status == 200 || this.status === 0) {
-                    
                     if (gisdebugmode) {
-                      console.error("this status ok", this.status, "thisresponsetext", this.responseText)
+                      console.log("this status ok", this.status, "thisresponsetext", this.responseText)
                     }
                     successcallback(this.responseText)
                   }
                   else {
                     if (gisdebugmode) {
-                      console.error("errV", this.status, posturl, params)
+                      console.log("errV", this.status, posturl, params)
                       if (this && this.responseText) {
-                        console.error("errL", this.responseText)
+                        console.log("errL", this.responseText)
                       }
                       else {
-                        console.error("noresponsetext")
+                        console.log("noresponsetext")
                       }
                     }
                     errorcallback(this.status)
@@ -1365,7 +1382,7 @@ function googleimagesrestored() {
 
               }
               if (gisdebugmode) {
-                console.error("queryid", queryid)
+                console.log("queryid", queryid)
               }
               var rpcids = "phEE8d"
               function randint(min, max) {
@@ -1579,8 +1596,6 @@ function googleimagesrestored() {
           moredetailsareabuttonsviewlink.href = fullsize
           moredetailsareabuttonsvisitlink.href = linkback 
         }
-        
-        
         if (gisversion > 1) {
           function qhunicode(string) {
             string = string.replace(/\\u0026/gm,"&").replace(/\\u003d/gm,"=")
@@ -1845,6 +1860,7 @@ function googleimagesrestored() {
           oldgis.data.details = true
           oldgisdetails.style.display = "flex"
         }
+        //console.log("renew", height, top, scrolly, realpaddingbottom)
         oldgisdetails.style.top = `${height+top+scrolly+realpaddingbottom}px`
         return
         
@@ -2271,35 +2287,22 @@ function googleimagesrestored() {
 
 }
 
-function waitForElement(selector) {
-  return new Promise(function(resolve, reject) {
-    var element = document.querySelector(selector)
-    if (element) {
-      resolve(element)
-      return
-    }
-    var observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        var nodes = Array.from(mutation.addedNodes)
-        for(var node of nodes) {
-          if(node.matches && node.matches(selector)) {
-            observer.disconnect()
-            resolve(node)
-            return
-          }
-        }
-      })
-    })
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  })
+function waitforelement(count) {
+  count++
+  if (count > 1000) {
+    console.log("first div never found!")
+    googleimagesrestored()
+    return null
+  }
+  let div = document.querySelector(`div[data-ri="0"]`)
+  if (div) {
+    googleimagesrestored()
+  }
+  else {
+    setTimeout(()=>{
+      waitforelement(count)
+    },10)
+  }
 }
 
-var backuptimeout = setTimeout(()=>{
-  console.error('googleimagesrestored urgent - main data-ri has changed -- needs fixing asap')
-  googleimagesrestored()
-},5000)
-
-waitForElement(`div[data-ri="0"]`).then(function(element) {
-  clearTimeout(backuptimeout)
-  googleimagesrestored()
-})
+waitforelement(0);

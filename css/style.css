@@ -4,12 +4,25 @@ g-loading-icon, .hg3Lgc {
 #rg, .islrc {
   min-width: 95vw!important
 }
+
+.qs41qe {
+  display: none!important;
+  height: 0!important;
+  margin-bottom: 0!important;
+}
+scrolling-carousel[jsname="XIiWWe"] {
+  display:none!important
+}
 #Sva75c {
   visibility:hidden
 }
 #islsp {
   display:none!important
 }
+#kO001e {
+  z-index:99999999999
+}
+
 /*
 unfortunately need to progressively load these now
 */
