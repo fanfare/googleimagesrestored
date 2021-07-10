@@ -14,4 +14,4 @@ This extension also re-adds the 'View Image' button that was removed at some poi
 
 This extension is available on [Chrome Web Store](https://chrome.google.com/webstore/detail/google-images-restored/ncndcebmkibkhopclfdjfacgfholcghi).
 
-It is also available as a [Firefox Add-On](https://github.com/fanfare/googleimagesrestored/releases/download/0.3.8/google_images_restored-0.3.8-fx.xpi) (click link to install on Firefox).
+It is also available as a [Firefox Add-On](https://github.com/fanfare/googleimagesrestored/releases/download/0.3.9/google_images_restored-0.3.9-fx.xpi) (click link to install on Firefox).
