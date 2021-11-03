@@ -824,13 +824,12 @@ function googleimagesrestored() {
           return
         }
         oldgis.details.propagate(false)
-        var fulltop = document.querySelectorAll(`[jscontroller="${jscontroller}"][data-ri="0"]`)[0].getBoundingClientRect().top + window.scrollY
-        var thistop = document.querySelectorAll('div.fmbrQQxz')[0].offsetTop
-        var thisheight = document.querySelectorAll('div.fmbrQQxz')[0].offsetHeight
-        var absolutetop = fulltop + thistop + thisheight + realpaddingbottom
         var oldgisdetails = document.getElementById("oldgisdetails")
-        console.log("resize", fulltop, thistop, thisheight, realpaddingbottom)
-        oldgisdetails.style.top = `${absolutetop}px`
+        var xthumb = document.querySelectorAll('.fmbrQQxz')[0]
+        var xheight = xthumb.offsetHeight
+        var xtop = xthumb.getBoundingClientRect().top
+        var xscrolly = window.scrollY
+        oldgisdetails.style.top = `${xheight+xtop+xscrolly+realpaddingbottom}px`
       }
       if (organic) {
         clearTimeout(oldgis.data.resizing.timer)
@@ -1860,10 +1859,8 @@ function googleimagesrestored() {
           oldgis.data.details = true
           oldgisdetails.style.display = "flex"
         }
-        //console.log("renew", height, top, scrolly, realpaddingbottom)
         oldgisdetails.style.top = `${height+top+scrolly+realpaddingbottom}px`
         return
-        
       },
       destroy: () => {
         oldgis.data.details = false
