@@ -22,6 +22,9 @@ scrolling-carousel[jsname="XIiWWe"] {
 #kO001e {
   z-index:99999999999
 }
+[jscontroller="ONqfcd"] {
+  outline: none
+}
 
 /*
 unfortunately need to progressively load these now
