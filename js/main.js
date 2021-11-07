@@ -45,7 +45,6 @@ function googleimagesrestored() {
     gisversion = 2
   }
   sheet.insertRule('.isv-r {pointer-events:all!important}',0)
-  console.log(`frontend gisversion ${gisversion}`)
 
   var detailsscale = (num, in_min, in_max, out_min, out_max) => {
     return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
@@ -287,14 +286,12 @@ function googleimagesrestored() {
   catch(e) {
     
   }
-
+  
   // mutationobserver --
   // new jscontroller elements to append size stats
-
+  
   let lastthumbcount = 0
-
   function propagatesizeinfo() {
-    
     let jscontrollercount = document.querySelectorAll(`div[jscontroller="${jscontroller}"]`).length
     if (jscontrollercount === lastthumbcount) {
       // nothing to do
@@ -325,10 +322,32 @@ function googleimagesrestored() {
   var observer = new MutationObserver(function(mutations) {
     setTimeout(()=>{propagatesizeinfo(),500})
   })
-
-  observer.observe(document.getElementById("islrg"), {attributes: false, childList: true, characterData: false, subtree:true})
   
-  // -- mutationobserver
+  // delayed start observe, nov 7, 2021
+  
+  let prepareretry = 0
+  function prepareforislrg() {
+    let node = document.getElementById("islrg")
+    if (!node) {
+      prepareretry++
+      if (prepareretry > 500) {
+        if (gisdebugmode) {
+          console.error("halt - islrg not found")
+        }
+      }
+      else {
+        setTimeout(prepareforislrg, 500)
+      }
+      return null
+    }
+    observer.observe(node, {
+      attributes: false, 
+      childList: true, 
+      characterData: false, 
+      subtree:true
+    })
+  }
+  
   var classrgl = ".rg_l"
   if (gisversion > 1) {
     try {
@@ -415,7 +434,6 @@ function googleimagesrestored() {
   sheet.insertRule('.eJXyZe {display:none!important}',0)
   sheet.insertRule(`.fmbrQQxz::before {content:'';z-index:999999999;position: absolute;text-align: center;margin: 0 auto;height: 0px;left: calc(50% - 10px);width: 0;height: 0;background: transparent;bottom: -32px;border-bottom: 17px solid #222;border-left: 16px solid transparent;border-right: 16px solid transparent;}`,0)
   sheet.insertRule(`body.exactgisopen .fmbrQQxz::before {z-index:0}`,0)
-  
   // 2021 APR 10
   // images on when searching by 'all sizes' for the same image no longer show
   // the image size on all of the thumbnails. this allows a user to

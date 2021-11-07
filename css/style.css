@@ -25,10 +25,9 @@ scrolling-carousel[jsname="XIiWWe"] {
 [jscontroller="ONqfcd"] {
   outline: none
 }
-
-/*
-unfortunately need to progressively load these now
-*/
+#islmp {
+  width:100%!important
+}
 .rg_ilmbg, .rg_anbg {
   width: 100%!important;
   border-radius: 0!important;
