@@ -310,15 +310,15 @@ function googleimagesrestored() {
         notmarked[i].insertAdjacentHTML("beforeend", `<div class="gishoverinfo">${gisow} x ${gisoh}</div>`)
       }
       catch(e) {
-        if (gisdebugmode) {
-          console.error(e)
-        }
+        // if (gisdebugmode) {
+        //   console.error(e)
+        // }
       }
     }
   }
-
+  
   propagatesizeinfo()
-
+  
   var observer = new MutationObserver(function(mutations) {
     setTimeout(()=>{propagatesizeinfo(),500})
   })
@@ -347,6 +347,8 @@ function googleimagesrestored() {
       subtree:true
     })
   }
+  
+  prepareforislrg()
   
   var classrgl = ".rg_l"
   if (gisversion > 1) {
@@ -997,16 +999,10 @@ function googleimagesrestored() {
               if (pstart === -1) {
                 throw new Error("less than one indexof [[")
               }
-              if (gisdebugmode) {
-                console.log("pstart", pstart)
-              }
               p = p.slice(pstart+1)
               p = p.split("\n")
               // change july 9, 2021 - old had ] this has ]]
               p = p[0]
-              if (gisdebugmode) {
-                console.log("jul9,2021,p", p)
-              }
               if (p.slice(-2) === "]]") {
                 // july 9, 2021 - ]] fix
                 p = p.slice(0,-1)
@@ -1320,27 +1316,12 @@ function googleimagesrestored() {
 
               var request = new XMLHttpRequest()
               posturl = posturl.replace(/(\r\n|\n|\r| )/gm, "")
-              if (gisdebugmode) {
-                console.log("requesting from", posturl, params)
-              }              
               request.onreadystatechange = function() {
                 if (this.readyState == 4) {
                   if (this.status == 200 || this.status === 0) {
-                    if (gisdebugmode) {
-                      console.log("this status ok", this.status, "thisresponsetext", this.responseText)
-                    }
                     successcallback(this.responseText)
                   }
                   else {
-                    if (gisdebugmode) {
-                      console.log("errV", this.status, posturl, params)
-                      if (this && this.responseText) {
-                        console.log("errL", this.responseText)
-                      }
-                      else {
-                        console.log("noresponsetext")
-                      }
-                    }
                     errorcallback(this.status)
                   }
                 }
@@ -1397,9 +1378,6 @@ function googleimagesrestored() {
               }
               catch(e) {
 
-              }
-              if (gisdebugmode) {
-                console.log("queryid", queryid)
               }
               var rpcids = "phEE8d"
               function randint(min, max) {
@@ -1727,19 +1705,11 @@ function googleimagesrestored() {
             try {
               // april 19 2020
               var qhblob = atobUTF8(document.getElementById("gisipcajaxcontent").innerHTML)
-              if (gisdebugmode) {
-                // jan 7 2021
-                console.log("apr 19 ajaxcontent", qhblob)
-                console.log("thumbpath", thumb)
-              }
               var searchlink
               let searchlinkfound = false
               try {
                 searchlink = `${thumb.split("%3A")[1].split("&")[0]}`
                 searchlinkfound = true
-                if (gisdebugmode) {
-                  console.log("%3A-19APR2020", searchlink)
-                }
               }
               catch(e) {
                 if (gisdebugmode) {
@@ -1751,9 +1721,6 @@ function googleimagesrestored() {
                   // https://encrypted-tbn0.gstatic.com/images?q=tbn:RANDOMSTRING&usqp=CAU
                   searchlink = `${thumb.split("tbn:")[1].split("&")[0]}`
                   searchlinkfound = true
-                  if (gisdebugmode) {
-                    console.log(":-7JAN2021", searchlink)
-                  }
                 }
                 catch(e) {
                   if (gisdebugmode) {
