@@ -1456,11 +1456,6 @@ function googleimagesrestored() {
                 }
               )
             }
-            // possible log request
-            function firstpass() {
-              // var url = 'https://www.google.com/log?format=json&hasfast=true&authuser=0'
-              // var params = `[[1,null,null,null,null,null,null,null,null,null,[null,null,null,null,"en",null,"boq_visualfrontendserver_20200131.02_p0"]],704,[["1580537279483",null,[],null,null,null,null,"[null,[null,\"12ahUKEwil75KV2K_nAhUSzawKHdifCMoQMygAegUIARCGAg..i\"],null,null,[[],[[24]],[]]]",null,null,5,null,null,null,null,null,null,null,null,[],1,null,null,"[[[1580537279481000,0,0],2],[[6985,null,null,[1]],[3593,null,null,[]]],[[1580537271859109,179096850,3389562840]],[null,null,null,null,null,null,null,null,null,null,null,null,null,[]]]",null,null,[]],["1580537279501",null,[],null,null,null,null,"[null,[\"2ahUKEwil75KV2K_nAhUSzawKHdifCMoQMygAegUIARCGAg\",\"12ahUKEwil75KV2K_nAhUSzawKHdifCMoQMygAegUIARCGAg..i\"],null,null,[[],[[24]],[]]]",null,null,null,null,null,null,null,null,null,null,null,[],2,null,null,"[[[1580537279481000,0,0],3],[[8467,null,null,[1,3,4,5,6,9,10,11,12]],[8187,null,null,[2]],[3597,null,null,[]],[3724,null,null,[]],[17628,null,null,[]],[8168,null,null,[]],[8164,null,null,[7,8],null,1],[36715,null,null,[]],[5877,null,null,[]],[3598,null,null,[]],[52885,null,null,[]],[8152,null,null,[]],[12678,null,null,[]]],null,[null,null,3,null,null,1,null,null,\"https://www.alimentarium.org/en/system/files/thumbnails/image/AL027-01_pomme_de_terre_0.jpg\",\"https://www.alimentarium.org/en/knowledge/potato\",null,\"hVA5Vk6tlrllEM\",\"MVIBc3JIcfYynM\",[]]]",null,null,[]]],"1580537279501",[],null,null,null,null,null,null,null,null,0]`
-            }
             secondpass()
           }
         }
