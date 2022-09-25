@@ -10,8 +10,43 @@ function googleimagesrestored() {
   }
   googleimagesrestoredloaded = true
 
-  const atobUTF8=function(){"use strict";function h(b){var a=b.charCodeAt(0)<<24,d=k(~a),c=0,f=b.length,e="";if(5>d&&f>=d){a=a<<d>>>24+d;for(c=1;c<d;++c)a=a<<6|b.charCodeAt(c)&63;65535>=a?e+=g(a):1114111>=a?(a-=65536,e+=g((a>>10)+55296,(a&1023)+56320)):c=0}for(;c<f;++c)e+="\ufffd";return e}var l=Math.log,m=Math.LN2,k=Math.clz32||function(b){return 31-l(b>>>0)/m|0},g=String.fromCharCode,n=atob;return function(b,a){a||"\u00ef\u00bb\u00bf"!==b.substring(0,3)||(b=b.substring(3));return n(b).replace(/[\xc0-\xff][\x80-\xbf]*/g,
-  h)}}();
+  // https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
+  var clz32 = Math.clz32 || (function(log, LN2){"use strict";
+      return function(x) {return 31 - log(x >>> 0) / LN2 | 0};
+  })(Math.log, Math.LN2);
+  var fromCharCode = String.fromCharCode;
+  var atobUTF8 = (function(atob, replacer){"use strict";
+      return function(inputString, keepBOM){
+          inputString = atob(inputString);
+          if (!keepBOM && inputString.substring(0,3) === "\xEF\xBB\xBF")
+              inputString = inputString.substring(3); // eradicate UTF-8 BOM
+          // 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
+          // 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
+          return inputString.replace(/[\xc0-\xff][\x80-\xbf]*/g, replacer);
+      }
+  })(atob, function(encoded){"use strict";
+      var codePoint = encoded.charCodeAt(0) << 24;
+      var leadingOnes = clz32(~codePoint);
+      var endPos = 0, stringLen = encoded.length;
+      var result = "";
+      if (leadingOnes < 5 && stringLen >= leadingOnes) {
+          codePoint = (codePoint<<leadingOnes)>>>(24+leadingOnes);
+          for (endPos = 1; endPos < leadingOnes; ++endPos)
+              codePoint = (codePoint<<6) | (encoded.charCodeAt(endPos)&0x3f/*0b00111111*/);
+          if (codePoint <= 0xFFFF) { // BMP code point
+            result += fromCharCode(codePoint);
+          } else if (codePoint <= 0x10FFFF) {
+            // https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+            codePoint -= 0x10000;
+            result += fromCharCode(
+              (codePoint >> 10) + 0xD800,  // highSurrogate
+              (codePoint & 0x3ff) + 0xDC00 // lowSurrogate
+            );
+          } else endPos = 0; // to fill it in with INVALIDs
+      }
+      for (; endPos < stringLen; ++endPos) result += "\ufffd"; // replacement character
+      return result;
+  });
 
   var gisdebugmode = false
 
@@ -29,7 +64,7 @@ function googleimagesrestored() {
     window.postMessage(JSON.stringify({gisipcblob:{id:uniqueid,data:encurl}}), "*")
   }
 
-  preloadipc( chrome.extension.getURL('js/ipc.js'), 'body')
+  preloadipc( chrome.runtime.getURL('js/ipc.js'), 'body')
 
   var sheet = (function() {
     var style = document.createElement("style")
@@ -588,7 +623,11 @@ function googleimagesrestored() {
       .moredetailsarea .moredetailsareatitle {
         color: #bbb;
         font-size:26px;
-        display:inline-block
+      }
+      .moredetailsareatitle {
+        height:62px;
+        display:flex;
+        align-items:end;
       }
       .moredetailsareatitle:hover {
         text-decoration:underline
@@ -995,6 +1034,7 @@ function googleimagesrestored() {
             try {
               var usearray = []
               var p = blob
+
               var pstart = p.indexOf("[[")
               if (pstart === -1) {
                 throw new Error("less than one indexof [[")
@@ -1008,47 +1048,96 @@ function googleimagesrestored() {
                 p = p.slice(0,-1)
               }
               var awfulblob = (JSON.parse(p))[2]
+              
               var newblob = (JSON.parse(awfulblob))[0]
               var newarray = []
+              
+              let relatedstrategy = 1
+              
               for (let i=0;i<newblob.length;i++) {
                 var thisblob = newblob[i]
                 if (typeof thisblob === "object") {
                   if (thisblob !== null) {
+                    // 25sep2022 -> thisblob[1]
+                    // need to try thisblob[1] if thisblob[0] doesnt contain the string "Related"
                     newarray = thisblob[0]
-                    break
-                  }
-                }
-              }
-              var relatedarray = []
-              for (let i=0;i<newarray.length;i++) {
-                var thisblob = newarray[i]
-                if (typeof thisblob === "object") {
-                  if (thisblob !== null && thisblob.length > 3) {
-                    relatedarray = thisblob
-                    break
-                  }
-                }
-              }
-              var allarrays = []
-              for (let i=0;i<relatedarray.length;i++) {
-                var thisblob = relatedarray[i]
-                if (typeof thisblob === "object") {
-                  if (thisblob !== null) {
-                    var found = true
-                    for (let j=0;j<thisblob.length;j++) {
-                      let thisblobchild = thisblob[j]
-                      if (typeof thisblobchild !== "object") {
-                        found = false
-                        break
+                    // test to see if newarray contains a string
+                    try {
+                      let tempstring = JSON.stringify(newarray)
+                      if (tempstring.toLowerCase().indexOf("related") === -1) {
+                        // need to use thisblob[1]
+                        newarray = thisblob[1][0][0][1][0]
+                        relatedstrategy = 2
                       }
                     }
-                    if (found) {
-                      allarrays = thisblob
+                    catch(e) {
+                      if (gisdebugmode) {
+                        console.error("error fetching alternate substring")
+                        console.error(e)
+                      }
+                    }
+                    break
+                  }
+                }
+              }
+              
+              var relatedarray = []
+              var allarrays = []
+              if (relatedstrategy === 1) {
+                // keep for now just in case some accounts are still using the pre-25sep2022 version
+                for (let i=0;i<newarray.length;i++) {
+                  var thisblob = newarray[i]
+                  if (typeof thisblob === "object") {
+                    if (thisblob !== null && thisblob.length > 3) {
+                      relatedarray = thisblob
                       break
                     }
                   }
                 }
-              }  
+                for (let i=0;i<relatedarray.length;i++) {
+                  var thisblob = relatedarray[i]
+                  if (typeof thisblob === "object") {
+                    if (thisblob !== null) {
+                      var found = true
+                      for (let j=0;j<thisblob.length;j++) {
+                        let thisblobchild = thisblob[j]
+                        if (typeof thisblobchild !== "object") {
+                          found = false
+                          break
+                        }
+                      }
+                      if (found) {
+                        allarrays = thisblob
+                        break
+                      }
+                    }
+                  }
+                }
+              }
+              else {
+                // 25sep2022 version
+                // note ~ helpful site: http://jsonselector.com/process
+                // {  obj   }[  key  ]
+                //  i  0  0         
+                // [0][0][0]['string'][1][9]['2003']
+                // [1][0][0]['string'][1][9]['2003']
+                // [2][0][0]['string'][1][9]['2003']
+                // [3][0][0]['string'][1][9]['2003']
+                try {
+                  for (let i=0;i<newarray.length;i++) {
+                    let obj = newarray[i][0][0]
+                    for (let key in obj) {
+                      allarrays.push(obj[key])
+                    }
+                  }
+                }
+                catch(e) {
+                  if (gisdebugmode) {
+                    console.error("error gathering related array")
+                  }
+                }
+              }
+              
               for (let i=0;i<allarrays.length;i++) {
                 var thisarray = allarrays[i][1]
                 var json = {
@@ -1070,12 +1159,13 @@ function googleimagesrestored() {
             }
             catch(e) {
               if (gisdebugmode) {
+                console.log("fail")
                 // typically, this should not reach here if valid JSON
                 // has been served by the server. this can catch if
                 // there are no related images and there's nothing to do..
                 // but if there ARE images, it should not reach here
                 // and if it does reach here, there is a bug in the JSON.
-                console.error(e)
+                console.log(e)
               }
               related = []
             }
@@ -1085,7 +1175,7 @@ function googleimagesrestored() {
               var pstart = p.indexOf(`u003drimg:`)
               if (pstart === -1) {
                 throw new Error("less than one")
-              }                   
+              }
               p = p.slice(pstart + 10)
               pstart = p.indexOf("\\")
               p = p.substring(0,pstart)
@@ -1099,7 +1189,9 @@ function googleimagesrestored() {
               }
             }
             catch(e) {
-              
+              if (gisdebugmode) {
+                console.error(e)
+              }
             }
             if (related.length === 0) {
               if (gisdebugmode) {
