@@ -349,6 +349,7 @@ function googleimagesrestored() {
   
   let lastthumbcount = 0
   function propagatesizeinfo() {
+    
     let jscontrollercount = document.querySelectorAll(`div[jscontroller="${jscontroller}"]`).length
     if (jscontrollercount === lastthumbcount) {
       // nothing to do
@@ -370,6 +371,25 @@ function googleimagesrestored() {
         // if (gisdebugmode) {
         //   console.error(e)
         // }
+      }
+      
+      try {
+        let as = notmarked[i].querySelector('a[data-ved]')
+        if (!as) {
+          as = notmarked[i].querySelector('a.WGvvNb')
+        }
+        let href = as.href
+        let domain = new URL(href)
+        let hostname = domain.hostname
+        var shortened = hostname.replace(/^www\./g, "")
+        if (shortened.length > 32) {
+          shortened = shortened.substring(0,29) + "..."
+        } 
+        let fxg = notmarked[i].querySelector('.fxgdke')
+        fxg.innerText = shortened
+      }
+      catch(e) {
+        
       }
     }
   }
@@ -966,13 +986,13 @@ function googleimagesrestored() {
         return
         
       },
+      
       related: (jsonid) => {
         
         function propagate(blob) {
           
           var footer = document.querySelectorAll(".moredetailsareafooter")[0]
           var thumb
-          
           
           if (gisversion === 1) {
             thumb = `<div class="oldgisrelatedthumbdata oldgisrelatedcurrentselection" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${oldgis.data.json.thumb})" data-title="${oldgis.data.json.title}" data-domain="${oldgis.data.json.domain}" data-width="${oldgis.data.json.width}" data-height="${oldgis.data.json.height}" data-thumb="${oldgis.data.json.thumb}" data-fullsize="${oldgis.data.json.fullsize}" data-linkback="${oldgis.data.json.linkback}" data-thumbuid="${oldgis.data.json.id}"></div>`
@@ -1176,7 +1196,6 @@ function googleimagesrestored() {
               }
               
               for (let i=0;i<allarrays.length;i++) {
-                
                 var thisarray = allarrays[i][1]
                 var json = {
                   realfullsize: true,
@@ -1189,15 +1208,11 @@ function googleimagesrestored() {
                   title: thisarray[9]["2003"][3],
                   id: thisarray[1]
                 }
-                
                 if (json.title.length > 30) {
                   json.title = json.title.substring(0,30) + "..."
                 }
-                
                 related.push(json)
-                
               }
-              
             }
             
             catch(e) {
@@ -1393,9 +1408,7 @@ function googleimagesrestored() {
                 outgoingarray.push(item)
               }
               return outgoingarray
-              
             }
-
 
             // if NO thumbs, use ONLY dummy thumbs
             if (related.length === 0) {
@@ -1437,14 +1450,8 @@ function googleimagesrestored() {
                   appenddummythumb(itemarray[i], i, i+1+ntarget)
                 }                
               }
-              
-
-              
               return
             }
-            
-            
-            
           }
         }
         
@@ -2605,7 +2612,6 @@ function googleimagesrestored() {
   }
   
   return null
-
 }
 
 function waitforelement(count) {

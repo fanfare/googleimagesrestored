@@ -1,7 +1,7 @@
 {
   "author": "fanfare",
   "name": "Google Images Restored",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "manifest_version": 3,
   "description": "Restores Google Images to how it appeared before August 6, 2019",
   "homepage_url": "https://github.com/fanfare/googleimagesrestored",
