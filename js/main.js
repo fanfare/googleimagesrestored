@@ -387,6 +387,8 @@ function googleimagesrestored() {
         } 
         let fxg = notmarked[i].querySelector('.fxgdke')
         fxg.innerText = shortened
+        let span = as.querySelector('span')
+        span.parentNode.insertBefore(span, fxg)
       }
       catch(e) {
         
