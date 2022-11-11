@@ -5,11 +5,12 @@ delete window.scrollToSelectedItemInline
 let googleimagesrestoredloaded = false
 
 function googleimagesrestored() {
+  
   if (googleimagesrestoredloaded) {
     return
   }
   googleimagesrestoredloaded = true
-
+  
   // https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
   var clz32 = Math.clz32 || (function(log, LN2){"use strict";
       return function(x) {return 31 - log(x >>> 0) / LN2 | 0};
@@ -79,6 +80,17 @@ function googleimagesrestored() {
     && document.querySelectorAll(`[jscontroller="Q7Rsec"]`).length === 0 ) {
     gisversion = 2
   }
+  else if ( document.querySelectorAll(`div.isv-r`).length > 0 
+    && document.querySelectorAll(`[jscontroller="Q7Rsec"]`).length === 0 ) {
+    // in instances where [jsmodel="BV3ECb"] and div.O8VmIc.a3Wc3
+    // have prevented div[data-ri="0"] from being found
+    gisversion = 3
+  }
+  
+  if (gisdebugmode) {
+    console.log("using gisversion", gisversion)
+  }
+  
   sheet.insertRule('.isv-r {pointer-events:all!important}',0)
 
   var detailsscale = (num, in_min, in_max, out_min, out_max) => {
@@ -316,7 +328,17 @@ function googleimagesrestored() {
 
   var jscontroller = "Q7Rsec"
   try {
-    jscontroller = document.querySelectorAll(`div[data-ri="0"]`)[0].getAttribute("jscontroller")
+    if (gisversion > 1) {
+      jscontroller = document.querySelector('div[data-ved].isv-r').getAttribute("jscontroller")
+    }
+    if (!jscontroller) {
+      if (gisversion === 2) {
+        jscontroller = document.querySelectorAll(`div[data-ri="0"]`)[0].getAttribute("jscontroller")
+      }
+      else if (gisversion === 3) {
+        jscontroller = document.querySelectorAll(`div.isv-r`)[0].getAttribute("jscontroller")  
+      }
+    }
   }
   catch(e) {
     
@@ -388,9 +410,7 @@ function googleimagesrestored() {
   var classrgl = ".rg_l"
   if (gisversion > 1) {
     try {
-      if (gisversion === 2) {
-        classrgl = ".wXeWr"
-      }
+      classrgl = ".wXeWr"
       if (document.querySelectorAll(`div[jscontroller="${jscontroller}"]`)[0]) {
         var alinks = document.querySelectorAll(`div[jscontroller="${jscontroller}"]:first-of-type a`)
         for (let i=0;i<alinks.length;i++) {
@@ -409,9 +429,7 @@ function googleimagesrestored() {
   var classilmbg = ".rg_ilmbg"
   if (gisversion > 1) {
     try {
-      if (gisversion === 2) {
-        classilmbg = ".h312td"
-      }
+      classilmbg = ".h312td"
     }
     catch(e) {
       
@@ -949,9 +967,13 @@ function googleimagesrestored() {
         
       },
       related: (jsonid) => {
+        
         function propagate(blob) {
+          
           var footer = document.querySelectorAll(".moredetailsareafooter")[0]
           var thumb
+          
+          
           if (gisversion === 1) {
             thumb = `<div class="oldgisrelatedthumbdata oldgisrelatedcurrentselection" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${oldgis.data.json.thumb})" data-title="${oldgis.data.json.title}" data-domain="${oldgis.data.json.domain}" data-width="${oldgis.data.json.width}" data-height="${oldgis.data.json.height}" data-thumb="${oldgis.data.json.thumb}" data-fullsize="${oldgis.data.json.fullsize}" data-linkback="${oldgis.data.json.linkback}" data-thumbuid="${oldgis.data.json.id}"></div>`
           }
@@ -959,7 +981,8 @@ function googleimagesrestored() {
             thumb = `<div class="oldgisrelatedthumbdata oldgisrelatedcurrentselection" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${oldgis.data.json.thumb})" data-title="${oldgis.data.json.title}" data-domain="${oldgis.data.json.domain}" data-width="${oldgis.data.json.width}" data-height="${oldgis.data.json.height}" data-thumb="${oldgis.data.json.thumb}" data-fullsize="${oldgis.data.json.fullsize}" data-linkback="${oldgis.data.json.linkback}" data-realfullsize="true" data-thumbuid="${oldgis.data.json.id}"></div>`          
           }
           var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="0"]`)[0]
-          insertion.innerHTML = thumb         
+          insertion.innerHTML = thumb    
+
           if (gisversion === 1) {
             var container = document.createElement("div")
             container.innerHTML = blob
@@ -1028,26 +1051,40 @@ function googleimagesrestored() {
               }    
             }
           }
+          
           else if (gisversion > 1) {
+            
             var related = []
             var seemorelink = false
+            
             try {
+              
               var usearray = []
               var p = blob
 
               var pstart = p.indexOf("[[")
+              
               if (pstart === -1) {
                 throw new Error("less than one indexof [[")
               }
+              
               p = p.slice(pstart+1)
               p = p.split("\n")
+              
               // change july 9, 2021 - old had ] this has ]]
               p = p[0]
+              
               if (p.slice(-2) === "]]") {
                 // july 9, 2021 - ]] fix
                 p = p.slice(0,-1)
               }
+              
               var awfulblob = (JSON.parse(p))[2]
+              // november 9, 2022 - JSON parse fail
+              
+              if (gisdebugmode) {
+                // console.log("awfulblob preparse", p)
+              }
               
               var newblob = (JSON.parse(awfulblob))[0]
               var newarray = []
@@ -1139,6 +1176,7 @@ function googleimagesrestored() {
               }
               
               for (let i=0;i<allarrays.length;i++) {
+                
                 var thisarray = allarrays[i][1]
                 var json = {
                   realfullsize: true,
@@ -1151,12 +1189,17 @@ function googleimagesrestored() {
                   title: thisarray[9]["2003"][3],
                   id: thisarray[1]
                 }
+                
                 if (json.title.length > 30) {
                   json.title = json.title.substring(0,30) + "..."
                 }
+                
                 related.push(json)
+                
               }
+              
             }
+            
             catch(e) {
               if (gisdebugmode) {
                 console.log("fail")
@@ -1169,13 +1212,22 @@ function googleimagesrestored() {
               }
               related = []
             }
+            
             try {
+              
               var expglob = ""
               var p = blob
+              
               var pstart = p.indexOf(`u003drimg:`)
+              
               if (pstart === -1) {
+                // november 9, 2022
+                if (gisdebugmode) {
+                  console.log("less than one error, pstart, full blob:", blob)
+                }
                 throw new Error("less than one")
               }
+              
               p = p.slice(pstart + 10)
               pstart = p.indexOf("\\")
               p = p.substring(0,pstart)
@@ -1188,152 +1240,224 @@ function googleimagesrestored() {
                 throw new Error("no searchword")
               }
             }
+
             catch(e) {
               if (gisdebugmode) {
                 console.error(e)
               }
             }
-            if (related.length === 0) {
-              if (gisdebugmode) {
-                console.log("relatedlengthzero")
+            
+            function appenddummythumb(item, i, thumbtarget) {
+              
+              try {
+                var thumbdomain
+                var thumbfullsize
+                var thumbthumb
+                var thumbtitle
+                var thumbid
+                var thumbwidth
+                var thumbheight
+                var thumblinkback
+                var thumbdomain
+                
+                var result = item
+                
+                if (!result) {
+                  return null
+                }
+                
+                thumbwidth = result.dataset.ow
+                thumbheight = result.dataset.oh
+                thumbid = result.dataset.tbnid || result.dataset.id
+                thumblinkback = "http://google.com"
+                
+                var atarget = result.querySelectorAll("a").length
+                var backupinnertext = ""
+                
+                for (let i=0;i<atarget;i++) {
+                  let qtlk = result.querySelectorAll("a")[i]
+                  
+                  if (qtlk.href) {
+                    if (qtlk.dataset && qtlk.dataset.title && qtlk.dataset.title.length > 0) {
+                      backupinnertext = qtlk.dataset.title
+                    }
+                    else if (qtlk.innerText && qtlk.innerText.length > 0) {
+                      backupinnertext = qtlk.innerText
+                    }
+                    else {
+                      // nov 10, 2022
+                      let tryspan = result.querySelector("a span")
+                      if (tryspan) {
+                        backupinnertext = tryspan.innerText
+                      }
+                    }
+                    thumblinkback = qtlk.href
+
+                    break
+                  }
+                }
+                
+                let ttis = result.querySelector("img")
+                thumbthumb = ttis.dataset && ttis.dataset.iurl
+                if (!thumbthumb) {
+                  thumbthumb = ttis.dataset && ttis.dataset.src
+                }
+                if (!thumbthumb) {
+                  thumbthumb = ttis.src
+                }
+                thumbfullsize = thumbthumb
+                var etmp = document.createElement ('a')
+                etmp.href = thumblinkback
+                var edomain = etmp.hostname.toString()
+                if (edomain.startsWith("www.")) {
+                  edomain = edomain.slice(4)
+                }
+                let fxgd = result.querySelector(".fxgdke")
+                if (fxgd) {
+                  edomain = fxgd.innerText
+                }
+                thumbdomain = edomain
+                var thumbtitle = backupinnertext
+                if (thumbtitle.length === 0) {
+                  thumbtitle = edomain
+                }
+                if (thumbtitle.length > 48) {
+                  thumbtitle = thumbtitle.substring(0,44) + " ..."
+                }
+                var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${thumbthumb})" data-title="${thumbtitle}" data-domain="${thumbdomain}" data-width="${thumbwidth}" data-height="${thumbheight}" data-thumb="${thumbthumb}" data-fullsize="${thumbfullsize}" data-linkback="${thumblinkback}" data-realfullsize="false" data-thumbuid="${thumbid}"></div>`
+                var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${thumbtarget}"]`)[0]
+                insertion.innerHTML = thumb
               }
-              var other = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz)`)
+              catch(e) {
+                if (gisdebugmode) {
+                  console.error(e)
+                }
+              }
+            }
+            
+            function appendtargetthumb(ntarget, i, thumbtarget) {
+              try {
+                var result = related[i]
+                let {realfullsize, domain, fullsize, height, id, linkback, title, width} = result
+                
+                var nthumb = result.thumb
+                var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${nthumb})" data-title="${title}" data-domain="${domain}" data-width="${width}" data-height="${height}" data-thumb="${nthumb}" data-fullsize="${fullsize}" data-linkback="${linkback}" data-thumbuid="${id}" data-realfullsize="true"></div>`
+                var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${thumbtarget}"]`)[0]
+                if (i === 6) {
+                  if (seemorelink) {
+                    thumb = `<a class="oldgisseemore" href="${seemorelink}"><div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${nthumb})"></div></a>`
+                  }
+                }
+                insertion.innerHTML = thumb
+              }
+              catch(e) {
+                if (gisdebugmode) {
+                  console.error(e)
+                }
+              }
+            }
+            
+            function buildshufflethumbs(seed, max) {
+              // deterministic random so the 'related' thumbs are consistent
+              var myrng = new Math.seedrandom(seed)
+              
+              let usablearray = []
+              var other = document.querySelectorAll(`[jscontroller="${jscontroller}"].sizepropagated:not(.fmbrQQxz)`)
+              for (let i=0;i<other.length;i++) {
+                if (other[i].querySelector("a") && other[i].dataset && other[i].dataset.tw) {
+                  usablearray.push(other[i])
+                }
+              }
+              other = usablearray
+              
               var target = other.length
-              target = target > 7 ? 7 : target
-              var shuffle = []
+              target = target > max ? max : target
+              let shuffle = []
+              
               var all = Array.from(Array(other.length).keys())
+              
               function randint(min, max) {
-                return ~~(Math.random() * (max - min + 1)) + min
+                return ~~(myrng() * (max - min + 1)) + min
               }
+              
               for (var i=0;i<target;i++) {
                 var rand = randint(0,all.length - 1)
                 shuffle.push(all[rand])
                 all.splice(rand,1)
               }
-              for (var i=0;i<shuffle.length;i++) {
-                try {
-                  var shuffled = shuffle[i]
-                  var thumbdomain
-                  var thumbfullsize
-                  var thumbthumb
-                  var thumbtitle
-                  var thumbid
-                  var thumbwidth
-                  var thumbheight
-                  var thumblinkback
-                  var thumbdomain
-                  // look everywhere
-                  var result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1})`)[0]
-                  if (!result) {
-                    shuffled--
-                    result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1})`)[0]
-                    if (!result) {
-                      shuffled++
-                      shuffled++
-                      result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1})`)[0]
-                      if (!result) {
-                        shuffled++
-                        result = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(1)`)[0]
-                        if (!result) {
-
-                          continue
-                        }
-                      }
-                    }
-                  }
-                  thumbwidth = result.dataset.ow
-                  thumbheight = result.dataset.oh
-                  thumbid = result.dataset.tbnid || result.dataset.id
-                  thumblinkback = "http://google.com"
-                  var atarget = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) a`).length
-                  var backupinnertext = ""
-                  for (let i=0;i<atarget;i++) {
-                    let qtlk = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) a`)[i]
-                    if (qtlk.href) {
-                      if (qtlk.dataset && qtlk.dataset.title && qtlk.dataset.title.length > 0) {
-                        backupinnertext = qtlk.dataset.title
-                      }
-                      else if (qtlk.innerText && qtlk.innerText.length > 0) {
-                        backupinnertext = qtlk.innerText
-                      }
-                      thumblinkback = qtlk.href  
-                      break
-                    }
-                  }
-                  thumbthumb = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) img`)[0].dataset.iurl
-                  if (!thumbthumb) {
-                    thumbthumb = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) img`)[0].dataset.src
-                  }
-                  if (!thumbthumb) {
-                    thumbthumb = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) img`)[0].src
-                  }
-                  thumbfullsize = thumbthumb
-                  var etmp = document.createElement ('a')
-                  etmp.href = thumblinkback
-                  var edomain = etmp.hostname.toString()
-                  if (edomain.startsWith("www.")) {
-                    edomain = edomain.slice(4)
-                  }
-                  if (document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) .fxgdke`)[0]) {
-                    edomain = document.querySelectorAll(`[jscontroller="${jscontroller}"]:not(.fmbrQQxz):nth-of-type(${shuffled+1}) .fxgdke`)[0].innerText
-                  }
-                  thumbdomain = edomain
-                  var thumbtitle = backupinnertext
-                  if (thumbtitle.length === 0) {
-                    thumbtitle = edomain
-                  }
-                  if (thumbtitle.length > 48) {
-                    thumbtitle = thumbtitle.substring(0,44) + " ..."
-                  }
-                  var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${thumbthumb})" data-title="${thumbtitle}" data-domain="${thumbdomain}" data-width="${thumbwidth}" data-height="${thumbheight}" data-thumb="${thumbthumb}" data-fullsize="${thumbfullsize}" data-linkback="${thumblinkback}" data-realfullsize="false" data-thumbuid="${thumbid}"></div>`
-                  var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i+1}"]`)[0]
-                  insertion.innerHTML = thumb
-                }
-                catch(e) {
-                  if (gisdebugmode) {
-                    console.error(e)
-                  }
-                }
+              
+              let outgoingarray = []
+              for (let i=0;i<shuffle.length;i++) {
+                let shuffled = shuffle[i]
+                let item = other[shuffled]
+                outgoingarray.push(item)
               }
-            }      
+              return outgoingarray
+              
+            }
+
+
+            // if NO thumbs, use ONLY dummy thumbs
+            if (related.length === 0) {
+              if (gisdebugmode) {
+                console.log("relatedlengthzero")
+              }
+
+              let rand = jsonid
+              if (!rand) {
+                rand = Math.random()
+              }
+              // ensure that the shuffled array are only valid thumbs
+              let itemarray = buildshufflethumbs(rand, 7)
+              
+              for (var i=0;i<itemarray.length;i++) {
+                appenddummythumb(itemarray[i], i, i+1)
+              }
+              
+            }
+            // if SOME or ALL thumbs,
             else {
               var ntarget = related.length
-              if (ntarget > 7) {
+              // if ALL thumbs, (will add a view more link)
+              if (ntarget >= 7) {
                 ntarget = 7
+                for (var i=0;i<ntarget;i++) {
+                  appendtargetthumb(ntarget, i, i+1)
+                }
               }
-              for (var i=0;i<ntarget;i++) {
-                try {
-                  var result = related[i]
-                  let {realfullsize, domain, fullsize, height, id, linkback, title, width} = result
-                  var nthumb = result.thumb
-                  var thumb = `<div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${nthumb})" data-title="${title}" data-domain="${domain}" data-width="${width}" data-height="${height}" data-thumb="${nthumb}" data-fullsize="${fullsize}" data-linkback="${linkback}" data-thumbuid="${id}" data-realfullsize="true"></div>`
-                  var insertion = document.querySelectorAll(`.oldgisrelatedimage[data-gisthumbrelid="${i+1}"]`)[0]
-                  if (i === 6) {
-                    if (seemorelink) {
-                      thumb = `<a class="oldgisseemore" href="${seemorelink}"><div class="oldgisrelatedthumbdata" style="cursor:pointer; width:85px; height:85px; background-size:cover; background-position:center center; background-color:rgba(255,255,255,.07); background-image:url(${nthumb})"></div></a>`
-                    }
-                  }
-                  insertion.innerHTML = thumb
-                  if (i > 5) {
-                    break
-                  }
+              // if SOME thumbs (1-6), first use real
+              // then append dummy thumbs (will not add a view more link)
+              else {
+                for (var i=0;i<ntarget;i++) {
+                  appendtargetthumb(ntarget, i, i+1)
                 }
-                catch(e) {
-                  if (gisdebugmode) {
-                    console.error(e)
-                  }
-                }
-              }                
+                let max = 7 - ntarget
+                let itemarray = buildshufflethumbs(rand, max)
+                for (var i=0;i<itemarray.length;i++) {
+                  appenddummythumb(itemarray[i], i, i+1+ntarget)
+                }                
+              }
+              
+
+              
               return
             }
+            
+            
+            
           }
         }
+        
         var relatedimages = document.querySelectorAll(`.oldgisrelatedimage`)
+        
         for (var i=0;i<8;i++) {
           relatedimages[i].innerHTML = ""
         }
+        
         try {
+          
           if (gisversion === 1) {
+            
             var active = document.querySelectorAll('div.fmbrQQxz a[jsname="hSRGPd"]')[0]
             if (!active) {
               throw new Error("hSRGPd not found")
@@ -1354,13 +1478,15 @@ function googleimagesrestored() {
             var regex = /\.jsfs\=\'(.+)\'/g
             var match = regex.exec(snippet)
             var jsfs = "fff"
+            
             if (match) {
               if (match[1]) {
                 jsfs = match[1]
               }
             }
+            
             url = `
-              https://www.google.com/async/imgrc
+            https://www.google.com/async/imgrc
               ?ei=${kei}
               &yv=3
               &csi=VJS.0,VOS.6
@@ -1386,24 +1512,30 @@ function googleimagesrestored() {
               &land=1
               &async=cidx:1,saved:0,iu:0,lp:0,_fmt:prog,_id:irc_imgrc1,_jsfs:${jsfs}
             `
+            
             url = url.replace(/(\r\n|\n|\r| )/gm, "")
             var xhr = new XMLHttpRequest()
             xhr.open('GET', url, true)
+            
             xhr.onload = function() {
               if (this.status >= 200 && this.status < 400) {
                 var blob = this.response
                 propagate(blob)
               }
             }
+            
             xhr.onerror = function() {
               if (gisdebugmode) {
                 console.log("error")
               }
               console.log("xhronerror")
             } 
+            
             xhr.send()
           }
+
           else {
+            
             function xhrprocess(posturl, params, successcallback, errorcallback) {
 
               var request = new XMLHttpRequest()
@@ -1419,17 +1551,28 @@ function googleimagesrestored() {
                 }
               }
               request.open('POST', posturl, true)
+              request.withCredentials = false
               request.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8")
               request.send(params)
             }
+            
             function secondpass() {
+              
               var dataid = jsonid
+              // testing for november 9, 2022
+              if (gisdebugmode) {
+                console.log("data id", dataid)
+              }
+              
               var docid = "M"
               // tested on visualfrontendserver20200131
               var p = document.getElementsByTagName("html")[0].innerHTML
               var pstart
+              
               try {
+                
                 pstart = p.indexOf(`,"${dataid}"`)
+                
                 if (pstart === -1) {
                   throw new Error("less than one")
                 }
@@ -1452,12 +1595,16 @@ function googleimagesrestored() {
                 if (pstart > 100) {
                   throw new Error("greater than one hundred")
                 }
+                
                 docid = p.substring(0, pstart)
+                
               }
               catch(e) {
 
               }
+              
               var queryid = "a"
+              
               try {
                 var title = document.title
                 var regex = /(.*) (\-|\–) Google .*$/
@@ -1471,13 +1618,19 @@ function googleimagesrestored() {
               catch(e) {
 
               }
+              
               var rpcids = "phEE8d"
+              
               function randint(min, max) {
                 return ~~(Math.random() * (max - min + 1)) + min
               }
+              
               var fsid = "4750123389312908396"
+              
               var aaaat = encodeURIComponent("AKEDXo5VdfHLDGNGBU01035Y2cLc:1580626044261")
+              
               var fullhtml = document.getElementsByTagName("html")[0].innerHTML
+              
               try {
                 var p = fullhtml
                 var pstart = p.indexOf(`FdrFJe":"`)
@@ -1486,11 +1639,13 @@ function googleimagesrestored() {
                 p = p.substring(0,pstart)
                 fsid = encodeURIComponent(p)    
               }
+              
               catch(e) {
                 if (gisdebugmode) {
                   console.error("dont use fsid")
                 }
               }
+              
               try {
                 var p = fullhtml
                 var pstart = p.indexOf(`SNlM0e":"`)
@@ -1508,33 +1663,57 @@ function googleimagesrestored() {
               let defaulthostname = window.location.hostname
               
               var geolang = "en-US"
+              
               try {
                 let elang = document.getElementsByTagName("html")[0].lang
                 if (elang !== "en") {
                   geolang = elang
                 }
               }
+              
               catch(e) {
                 if (gisdebugmode) {
                   console.error("en-US")
                 }
+                
               }
               
+              
+              // november 9, 2022
               var url = `
-              https://${defaulthostname}/_/VisualFrontendUi/data/batchexecute
+              https://www.google.com/_/VisualFrontendUi/data/batchexecute
                 ?rpcids=${rpcids}
+                &source-path=%2Fsearch
                 &f.sid=${fsid}
-                &bl=boq_visualfrontendserver_20200131.02_p0
+                &bl=boq_visualfrontendserver_20221108.07_p0
                 &hl=${geolang}
                 &authuser
                 &soc-app=162
                 &soc-platform=1
                 &soc-device=1
-                &_reqid=${100476 + randint(1,600000)}
+                &_reqid=${100476 + randint(1,10000)}
                 &rt=c
-                &at=${aaaat}
-              `    
-              var params = `f.req=%5B%5B%5B%22${rpcids}%22%2C%22%5Bnull%2C%5C%22${dataid}%5C%22%2C%5C%22${docid}%5C%22%2Cnull%2C433%2Cnull%2Cnull%2Cnull%2Cfalse%2C%5B%5C%22${queryid}%5C%22%5D%2Cnull%2Cnull%2Cfalse%2C0%2Cfalse%5D%22%2Cnull%2C%221%22%5D%5D%5D&`
+              `
+              
+              var params = `f.req=%5B%5B%5B%22${rpcids}%22%2C%22%5Bnull%2C%5C%22${dataid}%5C%22%2C%5C%22${docid}%5C%22%2Cnull%2C383%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5C%22${queryid}%5C%22%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%2Cnull%2Cnull%2Cfalse%2Cnull%2Cnull%2Cnull%2C%5B%5Bfalse%5D%2Cfalse%2C%5B%5D%2Cnull%2Ctrue%2C%5B%5D%2C%5Btrue%2Ctrue%5D%2Ctrue%5D%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%22%2Cnull%2C%221%22%5D%5D%5D&at=${aaaat}&`
+              
+              // january 24, 2020
+              ////  var url = `
+              ////  https://${defaulthostname}/_/VisualFrontendUi/data/batchexecute
+              ////    ?rpcids=${rpcids}
+              ////    &f.sid=${fsid}
+              ////    &bl=boq_visualfrontendserver_20200131.02_p0
+              ////    &hl=${geolang}
+              ////    &authuser
+              ////    &soc-app=162
+              ////    &soc-platform=1
+              ////    &soc-device=1
+              ////    &_reqid=${100476 + randint(1,600000)}
+              ////    &rt=c
+              ////    &at=${aaaat}
+              ////  `    
+              ////  var params = `f.req=%5B%5B%5B%22${rpcids}%22%2C%22%5Bnull%2C%5C%22${dataid}%5C%22%2C%5C%22${docid}%5C%22%2Cnull%2C433%2Cnull%2Cnull%2Cnull%2Cfalse%2C%5B%5C%22${queryid}%5C%22%5D%2Cnull%2Cnull%2Cfalse%2C0%2Cfalse%5D%22%2Cnull%2C%221%22%5D%5D%5D&`
+              
               xhrprocess(
                 url, 
                 params, 
@@ -1547,9 +1726,11 @@ function googleimagesrestored() {
                   }
                 }
               )
+              
             }
             secondpass()
           }
+
         }
         catch(e) {
           oldgis.power.off()
@@ -1560,6 +1741,7 @@ function googleimagesrestored() {
         }
       },
       propagate: (json) => {
+        
         var update
         if (!json) {
           update = false
@@ -1732,9 +1914,12 @@ function googleimagesrestored() {
                 jscrub = jscrub.substring(jindex+1, jscrub.length)
                 jindex = jscrub.indexOf(`",`)
                 jscrub = jscrub.substring(0,jindex)
+                
                 if (gisdebugmode) {
+                  // sometimes still working, november 9, 2022
                   console.log("24feb2020")
                 }
+                
                 fullsize = qhunicode(jscrub)
                 gisfullconclusion()
                 return                
@@ -1919,18 +2104,23 @@ function googleimagesrestored() {
         return
       },
       renew: () => {
+        
         if (!oldgis.data.thumb) {
           return
         }
+        
         var oldgisdetails = document.getElementById("oldgisdetails")
         var thumb = document.querySelectorAll('.fmbrQQxz')[0]
+        
         var height = thumb.offsetHeight
         var top = thumb.getBoundingClientRect().top
         var scrolly = window.scrollY
+        
         if (!oldgis.data.details) {
           oldgis.data.details = true
           oldgisdetails.style.display = "flex"
         }
+        
         oldgisdetails.style.top = `${height+top+scrolly+realpaddingbottom}px`
         return
       },
@@ -1961,18 +2151,27 @@ function googleimagesrestored() {
         }
       },
       enable: function(element) {
+        
         var swapbox = document.querySelectorAll(".oldgisswapbox")[0]
+        
         swapbox.src = ""
         swapbox.style.width = "0px"
         swapbox.style.height = "0px"
+        
         element.classList.add("fmbrQQxz")
+        
         oldgis.data.thumb = true
+        
         var top = element.getBoundingClientRect().top + element.offsetHeight
         var scrolly = window.scrollY
         var target = scrolly + top - detailsoffsettop
+        
         window.scrollTo(0, target)
+        
         oldgis.details.renew()
+        
         try {
+          
           var fullsize
           var linkback
           var thumb
@@ -1982,6 +2181,7 @@ function googleimagesrestored() {
           var title
           var id   
           let meta
+          
           if (gisversion === 1) {
             meta = document.querySelectorAll("div.fmbrQQxz .rg_meta")[0]
             if (meta) {
@@ -2003,79 +2203,124 @@ function googleimagesrestored() {
               title = document.querySelectorAll("div.fmbrQQxz .mVDMnf")[0].innerHTML
             }
           }
+          
           else {
-            meta = document.querySelectorAll("div.fmbrQQxz")[0]
+            
+            meta = document.querySelector("div.fmbrQQxz")
+            
             var atarget = document.querySelectorAll("div.fmbrQQxz a").length
             var linkbackhref = "http://google.com"
             var classwgvvnb = ".WGvvNb"
-            for (let i=0;i<atarget;i++) {
-              if (document.querySelectorAll("div.fmbrQQxz a")[i].href) {
-                linkbackhref = document.querySelectorAll("div.fmbrQQxz a")[i].href          
-                try {
-                  classwgvvnb = `.${document.querySelectorAll("div.fmbrQQxz a")[i].children[0].children[0].classList[0]}`
+            
+            // nov 2022
+            let tryspan = document.querySelector("div.fmbrQQxz a span")
+            let newclasswgvvnb = tryspan && tryspan.classList && tryspan.classList[0] ? tryspan.classList[0] : null
+            
+            let testclass = document.querySelectorAll('.OztcRd')
+            if (testclass.length > 0) {
+              classwgvvnb = ".OztcRd"
+            }
+            // if (newclasswgvvnb !== null) {
+            //   // "." + OztcRd (classname .OztcRd)
+            //   classwgvvnb = "." + newclasswgvvnb
+            // }
+            //else {
+              for (let i=0;i<atarget;i++) {
+                if (document.querySelectorAll("div.fmbrQQxz a")[i].href) {
+                  linkbackhref = document.querySelectorAll("div.fmbrQQxz a")[i].href
+                  //if (newclasswgvvnb === null) {
+                    // try {
+                    //   classwgvvnb = `.${document.querySelectorAll("div.fmbrQQxz a")[i].children[0].children[0].classList[0]}`
+                    // }
+                    // catch(e) {
+                    // 
+                    // }
+                  //}
+                  break
                 }
-                catch(e) {
-
-                }
-                break
               }
+            
+            //}
+            
+            let thim = document.querySelector("div.fmbrQQxz img")
+            thumb = thim && thim.dataset && thim.dataset.iurl
+            
+            if (!thumb) {
+              thumb = thim && thim.dataset && thim.dataset.src
             }
             
-            thumb = document.querySelectorAll("div.fmbrQQxz img")[0].dataset.iurl
             if (!thumb) {
-              thumb = document.querySelectorAll("div.fmbrQQxz img")[0].dataset.src
+              thumb = thim.src
             }
-            if (!thumb) {
-              thumb = document.querySelectorAll("div.fmbrQQxz img")[0].src
-            }
+            
             fullsize = thumb
             linkback = linkbackhref
+            
             var etmp = document.createElement ('a')
             etmp.href = linkbackhref
+            
             var edomain = etmp.hostname.toString()
             if (edomain.startsWith("www.")) {
               edomain = edomain.slice(4)
             }
-            if (document.querySelectorAll("div.fmbrQQxz .fxgdke")[0]) {
-              edomain = document.querySelectorAll("div.fmbrQQxz .fxgdke")[0].innerText
-            }
+            
+            let fxg = document.querySelector("div.fmbrQQxz .fxgdke")
+            
+            edomain = fxg ? fxg.innerText : ""
+            
             domain = edomain
-            width = document.querySelectorAll("div.fmbrQQxz")[0].dataset.ow
-            height = document.querySelectorAll("div.fmbrQQxz")[0].dataset.oh
+            width = 1
+            height = 1
+            
+            let fq = document.querySelector("div.fmbrQQxz")
+            
+            width = fq && fq.dataset && fq.dataset.ow ? fq.dataset.ow : 1
+            height = fq && fq.dataset && fq.dataset.oh ? fq.dataset.oh : 1
+            
             title = edomain
+            
             try {
-              title = document.querySelectorAll(`div.fmbrQQxz ${classwgvvnb}`)[0].innerText
+              title = document.querySelector(`div.fmbrQQxz ${classwgvvnb}`).innerText
             }
             catch(e) {
-
+              if (gisdebugmode) {
+                console.log("fail on try class wg")
+              }
             }
+            
             try {
               if (title.length === 0 || title === "" || title === edomain) {
-                title = document.querySelectorAll(`div.fmbrQQxz .WGvvNb`)[0].title
+                title = document.querySelector(`div.fmbrQQxz .WGvvNb`).title
               }
             }
             catch(e) {
-
+              title = edomain || "x"
             }
+            
             title = title.length > 57 ? title.substring(0,57) + " ..." : title
+            
             id = null
+            
             try {
-              id = document.querySelectorAll("div.fmbrQQxz")[0].dataset.tbnid           
+              id = document.querySelector("div.fmbrQQxz").dataset.tbnid           
             }
             catch(e) {
 
             }
+            
             try {
-              id = document.querySelectorAll("div.fmbrQQxz")[0].dataset.id           
+              id = document.querySelector("div.fmbrQQxz").dataset.id           
             }
             catch(e) {
 
-            }            
-          }
-          var realfullsize
-          if (gisversion > 1) {
+            }
             
           }
+          
+          var realfullsize
+          
+          domain = domain.replace(`\n · In stock`, "")
+          
           var json = {
             fullsize,
             linkback,
@@ -2087,6 +2332,7 @@ function googleimagesrestored() {
             id,
             realfullsize: false // v2
           }
+          
           if (json.id) {
             oldgis.details.propagate(json)
             oldgis.details.related(json.id)
@@ -2094,16 +2340,20 @@ function googleimagesrestored() {
           else {
             throw new Error(e)
           }
+          
           return          
         }
+
         catch(e) {
           if (gisdebugmode) {
             console.error(e)
           }
           oldgis.power.off()
         } 
+
         return
       }
+      
     },
     power: {
       off: () => {
@@ -2193,6 +2443,8 @@ function googleimagesrestored() {
     }
     catch(e) {
       if (gisdebugmode) {
+        // cannot read properties of length
+        // november 9, 2022
         console.error(e)
       }
     }
@@ -2363,7 +2615,7 @@ function waitforelement(count) {
     googleimagesrestored()
     return null
   }
-  let div = document.querySelector(`div[data-ri="0"]`)
+  let div = document.querySelector('div[data-ved].isv-r')
   if (div) {
     googleimagesrestored()
   }
