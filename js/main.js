@@ -11,6 +11,8 @@ function googleimagesrestored() {
   }
   googleimagesrestoredloaded = true
   
+  const gisdebugmode = false
+
   // https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
   var clz32 = Math.clz32 || (function(log, LN2){"use strict";
       return function(x) {return 31 - log(x >>> 0) / LN2 | 0};
@@ -48,8 +50,6 @@ function googleimagesrestored() {
       for (; endPos < stringLen; ++endPos) result += "\ufffd"; // replacement character
       return result;
   });
-
-  var gisdebugmode = false
 
   let gisuniqueid
 
@@ -1114,6 +1114,7 @@ function googleimagesrestored() {
               let relatedstrategy = 1
               
               for (let i=0;i<newblob.length;i++) {
+                // as of 09dec2022, it catches where i = 11
                 var thisblob = newblob[i]
                 if (typeof thisblob === "object") {
                   if (thisblob !== null) {
@@ -1124,8 +1125,16 @@ function googleimagesrestored() {
                     try {
                       let tempstring = JSON.stringify(newarray)
                       if (tempstring.toLowerCase().indexOf("related") === -1) {
-                        // need to use thisblob[1]
-                        newarray = thisblob[1][0][0][1][0]
+                        //                    .............                  
+                        // chrome, id is [11][1][0][0][1][0][0][0][0]['444383007'][1][1]
+                        newarray =   thisblob[1][0][0][1][0]
+                        let stringified = JSON.stringify(newarray)
+                        if (stringified.indexOf("http") === -1) {
+                          // probably firefox.. at least as of 09dec2022
+                          //                     .............
+                          // firefox, id is [11][1][0][1][1][0][0][0][0]['444383007'][1][1] 
+                          newarray =    thisblob[1][0][1][1][0]                          
+                        }
                         relatedstrategy = 2
                       }
                     }
@@ -1173,9 +1182,13 @@ function googleimagesrestored() {
                   }
                 }
               }
+              
               else {
+                
+                
+                
                 // 25sep2022 version
-                // note ~ helpful site: http://jsonselector.com/process
+                // note ~ helpful site: http://jsonselector.com/
                 // {  obj   }[  key  ]
                 //  i  0  0         
                 // [0][0][0]['string'][1][9]['2003']
@@ -1197,17 +1210,36 @@ function googleimagesrestored() {
                 }
               }
               
+              
+              // 09dec2022
+              let twothousandthree = 9
+              for (let i=0;i<allarrays.length;i++) {
+                for (let z=0;z<80;z++) {
+                  let thisarray = allarrays[i][1]
+                  if (thisarray[z] && thisarray[z]["2003"]) {
+                    twothousandthree = z
+                    break                   
+                  }
+                }
+                break
+              }
+              
+              if (gisdebugmode) {
+                console.log({twothousandthree})
+              }
+              
               for (let i=0;i<allarrays.length;i++) {
                 var thisarray = allarrays[i][1]
-                var json = {
+                var json
+                json = {
                   realfullsize: true,
                   fullsize: thisarray[3][0],
-                  linkback: thisarray[9]["2003"][2],
+                  linkback: thisarray[twothousandthree]["2003"][2],
                   thumb: thisarray[2][0],
-                  domain: thisarray[9]["2003"][12],
+                  domain: thisarray[twothousandthree]["2003"][12],
                   width: thisarray[3][2],
                   height: thisarray[3][1],
-                  title: thisarray[9]["2003"][3],
+                  title: thisarray[twothousandthree]["2003"][3],
                   id: thisarray[1]
                 }
                 if (json.title.length > 30) {
@@ -1215,6 +1247,7 @@ function googleimagesrestored() {
                 }
                 related.push(json)
               }
+              
             }
             
             catch(e) {
@@ -1737,6 +1770,7 @@ function googleimagesrestored() {
               )
               
             }
+
             secondpass()
           }
 
