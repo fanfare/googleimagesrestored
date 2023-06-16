@@ -1660,16 +1660,22 @@ function googleimagesrestored() {
                 queryid = title
               }
               catch(e) {
-
+                if (gisdebugmode) {
+                  console.log(e)
+                }
               }
               
               var rpcids = "phEE8d"
+              // june 16, 2023
+              rpcids = "by3N8b"
               
               function randint(min, max) {
                 return ~~(Math.random() * (max - min + 1)) + min
               }
               
               var fsid = "4750123389312908396"
+              // june 16, 2023
+              fsid = "5723232823349696440"
               
               var aaaat = encodeURIComponent("AKEDXo5VdfHLDGNGBU01035Y2cLc:1580626044261")
               
@@ -1722,39 +1728,48 @@ function googleimagesrestored() {
                 
               }
               
+              if (gisdebugmode) {
+                console.log({rpcids}, {fsid}, {geolang})
+              }
               
-              // november 9, 2022
-              var url = `
-              https://www.google.com/_/VisualFrontendUi/data/batchexecute
-                ?rpcids=${rpcids}
-                &source-path=%2Fsearch
-                &f.sid=${fsid}
-                &bl=boq_visualfrontendserver_20221108.07_p0
-                &hl=${geolang}
-                &authuser
-                &soc-app=162
-                &soc-platform=1
-                &soc-device=1
-                &_reqid=${100476 + randint(1,10000)}
-                &rt=c
-              `
+              // june 16, 2023
+              var url = `https://www.google.com/_/VisualFrontendUi/data/batchexecute?rpcids=${rpcids}&source-path=%2Fsearch&viewertype=7&f.sid=${fsid}&bl=boq_visualfrontendserver_20230615.00_p2&hl=${geolang}&authuser&soc-app=162&soc-platform=1&soc-device=1&_reqid=${400476 + randint(1,60000)}&rt=c`
               
-              var params = `f.req=%5B%5B%5B%22${rpcids}%22%2C%22%5Bnull%2C%5C%22${dataid}%5C%22%2C%5C%22${docid}%5C%22%2Cnull%2C383%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5C%22${queryid}%5C%22%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%2Cnull%2Cnull%2Cfalse%2Cnull%2Cnull%2Cnull%2C%5B%5Bfalse%5D%2Cfalse%2C%5B%5D%2Cnull%2Ctrue%2C%5B%5D%2C%5Btrue%2Ctrue%5D%2Ctrue%5D%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%22%2Cnull%2C%221%22%5D%5D%5D&at=${aaaat}&`
+              // no aaaat ?
+              var params = `f.req=%5B%5B%5B%22${rpcids}%22%2C%22%5Bnull%2Cnull%2Cnull%2C%5B450%2C%5C%22${queryid}%5C%22%2Cnull%2C%5Bnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5B0%5D%2C0%2C%5B%5D%2Cnull%2Cnull%2C%5B%5D%2C%5B0%2C0%5D%5D%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5C%22${queryid}%5C%22%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5C%22hp%5C%22%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%2Cnull%2Cnull%2Cnull%2Cnull%2C0%2Cnull%2Cnull%2C0%2C0%5D%2C%5B%5D%5D%2C%5B7%2C%5Bnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5Bnull%2C%5Bnull%2Cnull%2Cnull%2C%5B%7B%5C%2210284%5C%22%3A%5B%5C%22${dataid}%5C%22%2C%5C%22${docid}%5C%22%2C0%2C0%2C0%2C0%2C0%5D%7D%5D%5D%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B617%5D%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%2C%5B%5D%5D%5D%2C1%5D%22%2Cnull%2C%221%22%5D%5D%5D&`
               
-              // january 24, 2020
+              ////  // november 9, 2022
               ////  var url = `
-              ////  https://${defaulthostname}/_/VisualFrontendUi/data/batchexecute
-              ////    ?rpcids=${rpcids}
-              ////    &f.sid=${fsid}
-              ////    &bl=boq_visualfrontendserver_20200131.02_p0
-              ////    &hl=${geolang}
-              ////    &authuser
-              ////    &soc-app=162
-              ////    &soc-platform=1
-              ////    &soc-device=1
-              ////    &_reqid=${100476 + randint(1,600000)}
-              ////    &rt=c
-              ////    &at=${aaaat}
+              ////    https://www.google.com/_/VisualFrontendUi/data/batchexecute
+              ////      ?rpcids=${rpcids}
+              ////      &source-path=%2Fsearch
+              ////      &f.sid=${fsid}
+              ////      &bl=boq_visualfrontendserver_20221108.07_p0
+              ////      &hl=${geolang}
+              ////      &authuser
+              ////      &soc-app=162
+              ////      &soc-platform=1
+              ////      &soc-device=1
+              ////      &_reqid=${100476 + randint(1,10000)}
+              ////      &rt=c
+              ////  `
+              ////  
+              ////  var params = `f.req=%5B%5B%5B%22${rpcids}%22%2C%22%5Bnull%2C%5C%22${dataid}%5C%22%2C%5C%22${docid}%5C%22%2Cnull%2C383%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5C%22${queryid}%5C%22%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%2Cnull%2Cnull%2Cfalse%2Cnull%2Cnull%2Cnull%2C%5B%5Bfalse%5D%2Cfalse%2C%5B%5D%2Cnull%2Ctrue%2C%5B%5D%2C%5Btrue%2Ctrue%5D%2Ctrue%5D%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5D%5D%22%2Cnull%2C%221%22%5D%5D%5D&at=${aaaat}&`
+              
+              ////  // january 24, 2020
+              ////  var url = `
+              ////    https://${defaulthostname}/_/VisualFrontendUi/data/batchexecute
+              ////      ?rpcids=${rpcids}
+              ////      &f.sid=${fsid}
+              ////      &bl=boq_visualfrontendserver_20200131.02_p0
+              ////      &hl=${geolang}
+              ////      &authuser
+              ////      &soc-app=162
+              ////      &soc-platform=1
+              ////      &soc-device=1
+              ////      &_reqid=${100476 + randint(1,600000)}
+              ////      &rt=c
+              ////      &at=${aaaat}
               ////  `    
               ////  var params = `f.req=%5B%5B%5B%22${rpcids}%22%2C%22%5Bnull%2C%5C%22${dataid}%5C%22%2C%5C%22${docid}%5C%22%2Cnull%2C433%2Cnull%2Cnull%2Cnull%2Cfalse%2C%5B%5C%22${queryid}%5C%22%5D%2Cnull%2Cnull%2Cfalse%2C0%2Cfalse%5D%22%2Cnull%2C%221%22%5D%5D%5D&`
               
@@ -1986,6 +2001,7 @@ function googleimagesrestored() {
               
             try {
               var qhblob = document.body.innerHTML
+              
               var searchlink = `${thumb.split("=tbn")[1].replace(/\&/g, "\\u0026").replace(/\=/g, "\\u003d")}",`
               var index = qhblob.indexOf(searchlink)
               
@@ -2265,27 +2281,35 @@ function googleimagesrestored() {
             if (testclass.length > 0) {
               classwgvvnb = ".OztcRd"
             }
-            // if (newclasswgvvnb !== null) {
-            //   // "." + OztcRd (classname .OztcRd)
-            //   classwgvvnb = "." + newclasswgvvnb
-            // }
-            //else {
-              for (let i=0;i<atarget;i++) {
-                if (document.querySelectorAll("div.fmbrQQxz a")[i].href) {
-                  linkbackhref = document.querySelectorAll("div.fmbrQQxz a")[i].href
-                  //if (newclasswgvvnb === null) {
-                    // try {
-                    //   classwgvvnb = `.${document.querySelectorAll("div.fmbrQQxz a")[i].children[0].children[0].classList[0]}`
-                    // }
-                    // catch(e) {
-                    // 
-                    // }
-                  //}
-                  break
+            else {
+              // <h3 class="bytUYc"> 
+              // which contains the title as innerText inside the thumbnail
+              // june 16, 2023
+              testclass = document.querySelectorAll(".bytUYc")
+              if (testclass.length > 0) {
+                classwgvvnb = ".bytUYc"
+              }
+              else {
+                testclass = document.querySelectorAll(".BxWQUb")
+                if (testclass.length > 0) {
+                  classwgvvnb = ".BxWQUb"
+                }
+                else {
+                  // fallback
+                  // secondary title underneath url inside the thumbnail
+                  // june 16, 2023
+                  if (gisdebugmode) {
+                    console.log("no testclass found")
+                  }
                 }
               }
-            
-            //}
+            }
+            for (let i=0;i<atarget;i++) {
+              if (document.querySelectorAll("div.fmbrQQxz a")[i].href) {
+                linkbackhref = document.querySelectorAll("div.fmbrQQxz a")[i].href
+                break
+              }
+            }
             
             let thim = document.querySelector("div.fmbrQQxz img")
             thumb = thim && thim.dataset && thim.dataset.iurl
@@ -2329,6 +2353,7 @@ function googleimagesrestored() {
             }
             catch(e) {
               if (gisdebugmode) {
+                // broken on june 16, 2023
                 console.log("fail on try class wg")
               }
             }
