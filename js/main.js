@@ -475,6 +475,8 @@ function googleimagesrestored() {
     sheet.insertRule(`div[jscontroller="K3moCf"] {display:none}`,0)
     // related searches, jan 7 2021
     sheet.insertRule(`div[jscontroller="ewR3bd"] {display:none}`,0)
+    // related searches, june 16 2023
+    sheet.insertRule(`div[jscontroller="gDvwme"] {display:none}`,0)
   }
 
   sheet.insertRule(`.islsp {pointer-events:none!important;opacity:0!important}`,0)
