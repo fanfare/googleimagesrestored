@@ -2,8 +2,6 @@ Google Images Restored
 =====
 ![Google Images Restored](https://i.imgur.com/wcAG1iw.png)
 
-NOTE: as of June 17, 2023, the latest version is [`0.5.3`](https://github.com/fanfare/googleimagesrestored/releases/0.5.3/) which fixes some new bugs - the version currently in the chrome web store is not caught up yet, it should be available on there hopefully within a few days.
-
 ### Overview
 
 This extension attempts to make Google Images look and feel like it did before they changed everything on August 6th, 2019.
