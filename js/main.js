@@ -344,8 +344,33 @@ function googleimagesrestored() {
     
   }
   
+  // waitForElm('.r0zKGf').then((elm) => {
+  //   console.log('Element is ready')
+  //   if (elm.textContent.indexOf("anyway") > -1) {
+  //     elm.click()
+  //   }
+  // })
+
+  function waitForElm(selector) {
+    return new Promise(resolve => {
+      if (document.querySelector(selector)) {
+        return resolve(document.querySelector(selector))
+      }
+      const observer = new MutationObserver(mutations => {
+        if (document.querySelector(selector)) {
+          resolve(document.querySelector(selector))
+          observer.disconnect();
+        }
+      })
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      })
+    })
+  }  
   // mutationobserver --
   // new jscontroller elements to append size stats
+
   
   let lastthumbcount = 0
   function propagatesizeinfo() {
@@ -385,7 +410,7 @@ function googleimagesrestored() {
         if (shortened.length > 32) {
           shortened = shortened.substring(0,29) + "..."
         } 
-        let fxg = notmarked[i].querySelector('.fxgdke')
+        let fxg = notmarked[i].querySelector('.GdCiyb')
         fxg.innerText = shortened
         let span = as.querySelector('span')
         span.parentNode.insertBefore(span, fxg)
@@ -1364,6 +1389,7 @@ function googleimagesrestored() {
                 if (edomain.startsWith("www.")) {
                   edomain = edomain.slice(4)
                 }
+                
                 let fxgd = result.querySelector(".fxgdke")
                 if (fxgd) {
                   edomain = fxgd.innerText
@@ -2332,9 +2358,9 @@ function googleimagesrestored() {
               edomain = edomain.slice(4)
             }
             
-            let fxg = document.querySelector("div.fmbrQQxz .fxgdke")
-            
-            edomain = fxg ? fxg.innerText : ""
+            // let fxg = document.querySelector("div.fmbrQQxz .fxgdke")
+            // 
+            // edomain = fxg ? fxg.innerText : ""
             
             domain = edomain
             width = 1
